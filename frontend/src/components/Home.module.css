@@ -1,0 +1,135 @@
+/* Home.module.css */
+.container {
+  background-color: #000000;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  color: #FFFFFF;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+}
+
+.header {
+  padding: 20px;
+  background-color: rgba(28, 28, 30, 0.8);
+  backdrop-filter: blur(10px);
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: 600;
+  background: linear-gradient(45deg, #FF416C, #FF4B2B);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.authenticatedContent,
+.unauthenticatedContent {
+  text-align: center;
+}
+
+.avatarWrapper {
+  margin-bottom: 20px;
+}
+
+.avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #FF416C, #FF4B2B);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 32px;
+  font-weight: bold;
+  color: #FFFFFF;
+  margin: 0 auto;
+}
+
+.welcomeText {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.userName {
+  color: #FF416C;
+}
+
+.heroTitle {
+  font-size: 36px;
+  margin-bottom: 10px;
+}
+
+.heroText {
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 30px;
+}
+
+.actionButtons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.mainButton {
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: linear-gradient(45deg, #FF416C, #FF4B2B);
+  color: #FFFFFF;
+  box-shadow: 0 4px 6px rgba(255, 65, 108, 0.2);
+}
+
+.mainButton:hover {
+  background: linear-gradient(45deg, #FF4B2B, #FF416C);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(255, 65, 108, 0.3);
+}
+
+.features {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+}
+
+.featureItem {
+  text-align: center;
+}
+
+.featureIcon {
+  font-size: 32px;
+  margin-bottom: 10px;
+  display: block;
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.mainButton {
+  background-size: 200% 200%;
+  animation: gradientShift 3s ease infinite;
+}
