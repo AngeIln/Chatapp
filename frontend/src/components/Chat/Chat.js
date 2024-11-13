@@ -1,3 +1,4 @@
+// src/components/Chat/Chat.js
 import React, { useEffect, useState, useContext, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from '../../utils/api';
@@ -12,7 +13,6 @@ function Chat() {
   const [messageText, setMessageText] = useState('');
   const [loading, setLoading] = useState(true);
   const messagesEndRef = useRef(null);
-  const chatBoxRef = useRef(null);
 
   useEffect(() => {
     fetchConversation();
@@ -21,7 +21,7 @@ function Chat() {
   }, [conversationId]);
 
   useEffect(() => {
-    scrollToBottom();
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [conversation?.messages]);
 
   const fetchConversation = async () => {
@@ -33,10 +33,6 @@ function Chat() {
       console.error(err);
       setLoading(false);
     }
-  };
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   const handleSendMessage = async (e) => {
@@ -58,13 +54,6 @@ function Chat() {
     } catch (err) {
       console.error(err);
     }
-  };
-
-  const formatTime = (timestamp) => {
-    return new Date(timestamp).toLocaleTimeString([], {
-      hour: '2-digit',
-      minute: '2-digit'
-    });
   };
 
   if (loading) {
@@ -101,7 +90,7 @@ function Chat() {
         </div>
       </div>
 
-      <div className={styles.messagesContainer} ref={chatBoxRef}>
+      <div className={styles.messagesContainer}>
         {conversation.messages.map((msg, index) => (
           <div
             key={index}
@@ -112,7 +101,10 @@ function Chat() {
             <div className={styles.message}>
               <p>{msg.message}</p>
               <span className={styles.timestamp}>
-                {formatTime(msg.timestamp)}
+                {new Date(msg.timestamp).toLocaleTimeString([], {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })}
               </span>
             </div>
           </div>

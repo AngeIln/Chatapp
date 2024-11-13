@@ -1,3 +1,4 @@
+// src/contexts/AuthContext.js
 import React, { createContext, useState, useEffect } from 'react';
 import axios from '../utils/api';
 
@@ -6,7 +7,7 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
-  // Charger l'utilisateur depuis le localStorage au démarrage
+  // Load user from localStorage on startup
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     const storedToken = localStorage.getItem('token');
@@ -25,7 +26,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('token', access_token);
     axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
 
-    // Obtenir les informations de l'utilisateur courant
+    // Fetch current user info
     const userResponse = await axios.get('/users/me');
     localStorage.setItem('user', JSON.stringify(userResponse.data));
     setUser(userResponse.data);
@@ -36,7 +37,7 @@ export const AuthProvider = ({ children }) => {
       name: username,
       password: password,
     });
-    // Après l'inscription, effectuer la connexion
+    // After signup, log the user in
     await login(username, password);
   };
 

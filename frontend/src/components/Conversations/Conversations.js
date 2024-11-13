@@ -1,3 +1,4 @@
+// src/components/Conversations/Conversations.js
 import React, { useEffect, useState, useContext } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
 import axios from '../../utils/api';
@@ -47,12 +48,6 @@ function Conversations() {
     u.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const LoadingSpinner = () => (
-    <div className={styles.loadingSpinner}>
-      <div className={styles.spinner}></div>
-    </div>
-  );
-
   return (
     <div className={styles.pageContainer}>
       <div className={styles.conversationsWrapper}>
@@ -70,7 +65,7 @@ function Conversations() {
         </header>
 
         {loading ? (
-          <LoadingSpinner />
+          <div>Chargement...</div>
         ) : (
           <div className={styles.conversationsList}>
             {conversations.length === 0 ? (

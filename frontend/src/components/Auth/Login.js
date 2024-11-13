@@ -1,3 +1,4 @@
+// src/components/Auth/Login.js
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -16,7 +17,7 @@ function Login() {
       await login(username, password);
       navigate('/');
     } catch (err) {
-      setError('Nom d\'utilisateur ou mot de passe incorrect');
+      setError("Nom d'utilisateur ou mot de passe incorrect");
     }
   };
 

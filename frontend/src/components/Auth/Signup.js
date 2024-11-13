@@ -1,3 +1,4 @@
+// src/components/Auth/Signup.js
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
@@ -16,7 +17,7 @@ function Signup() {
       await signup(username, password);
       navigate('/');
     } catch (err) {
-      setError('Erreur lors de l\'inscription');
+      setError("Erreur lors de l'inscription");
     }
   };
 
@@ -26,7 +27,7 @@ function Signup() {
       <div className={styles.formContainer}>
         <h1 className={styles.logo}>ChatApp</h1>
         <h2 className={styles.title}>Créer un compte</h2>
-        
+
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.inputField}>
             <input
