@@ -1,3 +1,19 @@
+#
+<h1>
+Changement a faire 
+</h1>
+
+<h2>
+- Ajoutez des bios
+- création de photo de profil
+- groupe
+- Création de note
+- Création d'une page setting
+</h2>
+
+#
+
+
 ###
 <h1>
 Ajoutez des bios
@@ -18,13 +34,13 @@ création de photo de profil
 #
 
 ###
-ajoutez profil dans la base de donné
-faire en sorte que le profil sois chargé sur tout les page
+- ajoutez profil dans la base de donné
+- faire en sorte que le profil sois chargé sur tout les page
 ###
 
 
 #
-possibilité de créé des groupe avec plusieur utilisateur
+groupe 
 #
 
 #
