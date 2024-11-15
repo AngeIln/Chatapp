@@ -6,6 +6,7 @@ from datetime import datetime
 # Modèles pour l'utilisateur
 class UserBase(BaseModel):
     name: str
+    bio: Optional[str] = None  # Ajout du champ bio
 
 class UserCreate(UserBase):
     password: str
@@ -25,5 +26,6 @@ class Message(BaseModel):
 # Modèles pour les conversations
 class Conversation(BaseModel):
     id: str
+    name: Optional[str] = None  # Nom du groupe (optionnel)
     participants: List[str]
     messages: List[Message] = []

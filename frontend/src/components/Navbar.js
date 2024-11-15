@@ -1,3 +1,4 @@
+// src/components/Navbar.jsx
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
@@ -24,14 +25,13 @@ function Navbar() {
                   Profil
                 </Link>
               </div>
+
               <div className={styles.userSection}>
                 <div className={styles.userInfo}>
                   <div className={styles.userAvatar}>
                     {user.name ? user.name.charAt(0).toUpperCase() : '?'}
                   </div>
-                  <span className={styles.userName}>
-                    {user.name || user.email}
-                  </span>
+                  <span className={styles.userName}>{user.name}</span>
                 </div>
                 <button onClick={logout} className={styles.logoutButton}>
                   Déconnexion

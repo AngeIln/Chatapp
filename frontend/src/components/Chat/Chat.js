@@ -1,4 +1,4 @@
-// src/components/Chat/Chat.js
+// src/components/Chat/Chat.jsx
 import React, { useEffect, useState, useContext, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from '../../utils/api';
@@ -13,6 +13,7 @@ function Chat() {
   const [messageText, setMessageText] = useState('');
   const [loading, setLoading] = useState(true);
   const messagesEndRef = useRef(null);
+  const [participants, setParticipants] = useState([]);
 
   useEffect(() => {
     fetchConversation();
@@ -28,6 +29,7 @@ function Chat() {
     try {
       const response = await axios.get(`/conversations/${conversationId}`);
       setConversation(response.data);
+      setParticipants(response.data.participants);
       setLoading(false);
     } catch (err) {
       console.error(err);
@@ -71,9 +73,30 @@ function Chat() {
     );
   }
 
-  const otherParticipant = conversation.participants.find(
-    (name) => name !== user.name
-  );
+  const renderMessage = (msg, index) => {
+    const isCurrentUser = msg.sender === user.name;
+    return (
+      <div
+        key={index}
+        className={`${styles.messageWrapper} ${
+          isCurrentUser ? styles.sent : styles.received
+        }`}
+      >
+        {!isCurrentUser && (
+          <span className={styles.senderName}>{msg.sender}</span>
+        )}
+        <div className={styles.message}>
+          <p>{msg.message}</p>
+          <span className={styles.timestamp}>
+            {new Date(msg.timestamp).toLocaleTimeString([], {
+              hour: '2-digit',
+              minute: '2-digit',
+            })}
+          </span>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div className={styles.chatContainer}>
@@ -85,30 +108,24 @@ function Chat() {
           ←
         </button>
         <div className={styles.participantInfo}>
-          <div className={styles.avatar}>{otherParticipant.charAt(0).toUpperCase()}</div>
-          <span>{otherParticipant}</span>
+          <div className={styles.avatar}>
+            {conversation.name
+              ? conversation.name.charAt(0).toUpperCase()
+              : participants
+                  .filter((name) => name !== user.name)
+                  .join(', ')
+                  .charAt(0)
+                  .toUpperCase()}
+          </div>
+          <span>
+            {conversation.name ||
+              participants.filter((name) => name !== user.name).join(', ')}
+          </span>
         </div>
       </div>
 
       <div className={styles.messagesContainer}>
-        {conversation.messages.map((msg, index) => (
-          <div
-            key={index}
-            className={`${styles.messageWrapper} ${
-              msg.sender === user.name ? styles.sent : styles.received
-            }`}
-          >
-            <div className={styles.message}>
-              <p>{msg.message}</p>
-              <span className={styles.timestamp}>
-                {new Date(msg.timestamp).toLocaleTimeString([], {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                })}
-              </span>
-            </div>
-          </div>
-        ))}
+        {conversation.messages.map((msg, index) => renderMessage(msg, index))}
         <div ref={messagesEndRef} />
       </div>
 
@@ -120,8 +137,8 @@ function Chat() {
           placeholder="Écrivez votre message..."
           className={styles.messageInput}
         />
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           className={styles.sendButton}
           disabled={!messageText.trim()}
         >

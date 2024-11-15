@@ -1,4 +1,4 @@
-// src/components/Conversations/Conversations.js
+// src/components/Conversations/Conversations.jsx
 import React, { useEffect, useState, useContext } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
 import axios from '../../utils/api';
@@ -11,7 +11,10 @@ function Conversations() {
   const [users, setUsers] = useState([]);
   const [isNewConvoOpen, setIsNewConvoOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedUsers, setSelectedUsers] = useState([]);
+  const [groupName, setGroupName] = useState('');
   const [loading, setLoading] = useState(true);
+  const [selectedUserProfile, setSelectedUserProfile] = useState(null);
 
   useEffect(() => {
     fetchData();
@@ -22,11 +25,11 @@ function Conversations() {
       setLoading(true);
       const [convoResponse, usersResponse] = await Promise.all([
         axios.get('/conversations'),
-        axios.get('/users')
+        axios.get('/users'),
       ]);
-      
+
       setConversations(convoResponse.data);
-      setUsers(usersResponse.data.filter(u => u.name !== user.name));
+      setUsers(usersResponse.data.filter((u) => u.name !== user.name));
     } catch (error) {
       console.error('Erreur lors du chargement des données:', error);
     } finally {
@@ -34,17 +37,38 @@ function Conversations() {
     }
   };
 
-  const handleNewConversation = async (selectedUser) => {
+  const handleUserSelect = async (username) => {
+    if (selectedUsers.includes(username)) {
+      setSelectedUsers(selectedUsers.filter((user) => user !== username));
+      setSelectedUserProfile(null);
+    } else {
+      setSelectedUsers([...selectedUsers, username]);
+      try {
+        const response = await axios.get(`/users/${username}`);
+        setSelectedUserProfile(response.data);
+      } catch (error) {
+        console.error('Erreur lors du chargement du profil utilisateur:', error);
+      }
+    }
+  };
+
+  const handleCreateConversation = async () => {
     try {
-      await axios.post('/conversations', [selectedUser]);
+      await axios.post('/conversations', {
+        participants: selectedUsers,
+        name: groupName || null,
+      });
       await fetchData();
       setIsNewConvoOpen(false);
+      setSelectedUsers([]);
+      setGroupName('');
+      setSelectedUserProfile(null);
     } catch (error) {
       console.error('Erreur lors de la création de la conversation:', error);
     }
   };
 
-  const filteredUsers = users.filter(u => 
+  const filteredUsers = users.filter((u) =>
     u.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -53,8 +77,8 @@ function Conversations() {
       <div className={styles.conversationsWrapper}>
         <header className={styles.header}>
           <div className={styles.headerTop}>
-            <h1 className={styles.title}>Messages</h1>
-            <button 
+            <h1 className={styles.title}>Conversations</h1>
+            <button
               className={styles.newChatBtn}
               onClick={() => setIsNewConvoOpen(true)}
               aria-label="Nouvelle conversation"
@@ -65,13 +89,13 @@ function Conversations() {
         </header>
 
         {loading ? (
-          <div>Chargement...</div>
+          <div className={styles.loading}>Chargement...</div>
         ) : (
           <div className={styles.conversationsList}>
             {conversations.length === 0 ? (
               <div className={styles.emptyState}>
                 <p>Aucune conversation pour le moment</p>
-                <button 
+                <button
                   onClick={() => setIsNewConvoOpen(true)}
                   className={styles.startChatBtn}
                 >
@@ -80,22 +104,28 @@ function Conversations() {
               </div>
             ) : (
               conversations.map((convo) => {
-                const otherParticipant = convo.participants.find(
-                  name => name !== user.name
-                );
+                let displayName = '';
+                if (convo.name) {
+                  displayName = convo.name;
+                } else {
+                  const otherParticipants = convo.participants.filter(
+                    (name) => name !== user.name
+                  );
+                  displayName = otherParticipants.join(', ');
+                }
                 return (
-                  <Link 
-                    to={`/chat/${convo.id}`} 
+                  <Link
+                    to={`/chat/${convo.id}`}
                     key={convo.id}
                     className={styles.conversationCard}
                   >
                     <div className={styles.avatarContainer}>
                       <div className={styles.avatar}>
-                        {otherParticipant.charAt(0).toUpperCase()}
+                        {displayName.charAt(0).toUpperCase()}
                       </div>
                     </div>
                     <div className={styles.conversationDetails}>
-                      <h3>{otherParticipant}</h3>
+                      <h3>{displayName}</h3>
                     </div>
                   </Link>
                 );
@@ -107,17 +137,34 @@ function Conversations() {
 
       {isNewConvoOpen && (
         <div className={styles.modalOverlay} onClick={() => setIsNewConvoOpen(false)}>
-          <div className={styles.modal} onClick={e => e.stopPropagation()}>
+          <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
             <div className={styles.modalHeader}>
               <h2>Nouvelle conversation</h2>
-              <button 
+              <button
                 className={styles.closeBtn}
-                onClick={() => setIsNewConvoOpen(false)}
+                onClick={() => {
+                  setIsNewConvoOpen(false);
+                  setSelectedUsers([]);
+                  setGroupName('');
+                  setSelectedUserProfile(null);
+                }}
               >
                 ×
               </button>
             </div>
-            
+
+            {selectedUsers.length > 1 && (
+              <div className={styles.groupNameContainer}>
+                <input
+                  type="text"
+                  placeholder="Nom du groupe (optionnel)"
+                  value={groupName}
+                  onChange={(e) => setGroupName(e.target.value)}
+                  className={styles.groupNameInput}
+                />
+              </div>
+            )}
+
             <div className={styles.searchContainer}>
               <input
                 type="text"
@@ -130,10 +177,12 @@ function Conversations() {
 
             <div className={styles.usersList}>
               {filteredUsers.map((u) => (
-                <div 
-                  key={u.name} 
-                  className={styles.userCard}
-                  onClick={() => handleNewConversation(u.name)}
+                <div
+                  key={u.name}
+                  className={`${styles.userCard} ${
+                    selectedUsers.includes(u.name) ? styles.selected : ''
+                  }`}
+                  onClick={() => handleUserSelect(u.name)}
                 >
                   <div className={styles.avatar}>
                     {u.name.charAt(0).toUpperCase()}
@@ -142,11 +191,24 @@ function Conversations() {
                 </div>
               ))}
               {filteredUsers.length === 0 && (
-                <div className={styles.noResults}>
-                  Aucun utilisateur trouvé
-                </div>
+                <div className={styles.noResults}>Aucun utilisateur trouvé</div>
               )}
             </div>
+
+            {selectedUserProfile && selectedUsers.length === 1 && (
+              <div className={styles.userProfile}>
+                <h3>{selectedUserProfile.name}</h3>
+                <p>{selectedUserProfile.bio || 'Cet utilisateur n\'a pas de bio.'}</p>
+              </div>
+            )}
+
+            <button
+              onClick={handleCreateConversation}
+              className={styles.createGroupButton}
+              disabled={selectedUsers.length === 0}
+            >
+              Créer la conversation
+            </button>
           </div>
         </div>
       )}

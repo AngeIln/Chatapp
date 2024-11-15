@@ -11,18 +11,18 @@ import bcrypt
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
-# Fonction pour vérifier l'utilisateur
+# Fonction pour vérifier le mot de passe
 def verify_password(plain_password, hashed_password):
     return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password.encode('utf-8'))
 
-# Fonction pour récupérer l'utilisateur
+# Fonction pour récupérer un utilisateur depuis la base de données
 def get_user(db, username: str):
     user = db.find_one({"name": username})
     if user:
         return UserInDB(name=user["name"], hashed_password=user["password"])
     return None
 
-# Fonction pour authentifier l'utilisateur
+# Fonction pour authentifier un utilisateur
 def authenticate_user(db, username: str, password: str):
     user = get_user(db, username)
     if not user:
@@ -31,14 +31,14 @@ def authenticate_user(db, username: str, password: str):
         return False
     return user
 
-# Fonction pour créer un token d'accès
+# Fonction pour créer un token JWT
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     to_encode = data.copy()
     expire = datetime.utcnow() + (expires_delta if expires_delta else timedelta(minutes=15))
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
-# Fonction pour obtenir l'utilisateur actuel
+# Dépendance pour obtenir l'utilisateur courant
 async def get_current_user(token: str = Depends(oauth2_scheme)):
     credentials_exception = HTTPException(
         status_code=401,
