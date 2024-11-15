@@ -1,257 +1,257 @@
 /* Base container */
 .container {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(45deg, #000000, #1a1a1a);
-    position: relative;
-    padding: 20px;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(45deg, #000000, #1a1a1a);
+  position: relative;
+  padding: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Overlay effect */
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  z-index: 1;
+}
+
+/* Form container */
+.formContainer {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 400px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 40px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Logo styling */
+.logo {
+  font-size: 2rem;
+  font-weight: 700;
+  background: linear-gradient(45deg, #f09433, #e6683c, #dc2743);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Title styling */
+.title {
+  color: #ffffff;
+  font-size: 1.5rem;
+  text-align: center;
+  margin-bottom: 30px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+/* Form styling */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Input field container */
+.inputField {
+  position: relative;
+}
+
+/* Input styling */
+.inputField input {
+  width: 100%;
+  padding: 15px 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  color: white;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+/* Input focus state */
+.inputField input:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 0 4px rgba(220, 39, 67, 0.1);
+}
+
+/* Input placeholder */
+.inputField input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Button styling */
+.button {
+  background: linear-gradient(45deg, #f09433, #e6683c, #dc2743);
+  color: white;
+  padding: 15px;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Button hover state */
+.button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(220, 39, 67, 0.2);
+}
+
+/* Button active state */
+.button:active {
+  transform: translateY(0);
+}
+
+/* Error message styling */
+.error {
+  color: #ff4444;
+  font-size: 14px;
+  text-align: center;
+  background: rgba(255, 68, 68, 0.1);
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 68, 68, 0.2);
+  margin-top: -10px;
+}
+
+/* Link styling */
+.link {
+  display: block;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  margin-top: 30px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  padding: 10px;
+}
+
+/* Link hover state */
+.link:hover {
+  color: white;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+/* Animation keyframes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
-  
-  /* Overlay effect */
-  .overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(5px);
-    z-index: 1;
-  }
-  
-  /* Form container */
-  .formContainer {
-    position: relative;
-    z-index: 2;
-    width: 100%;
-    max-width: 400px;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    padding: 40px;
-    border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    animation: fadeIn 0.5s ease-out;
-  }
-  
-  /* Logo styling */
-  .logo {
-    font-size: 2rem;
-    font-weight: 700;
-    background: linear-gradient(45deg, #f09433, #e6683c, #dc2743);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  /* Title styling */
-  .title {
-    color: #ffffff;
-    font-size: 1.5rem;
-    text-align: center;
-    margin-bottom: 30px;
-    font-weight: 500;
-    letter-spacing: 0.5px;
-  }
-  
-  /* Form styling */
-  .form {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-  
-  /* Input field container */
-  .inputField {
-    position: relative;
-  }
-  
-  /* Input styling */
-  .inputField input {
-    width: 100%;
-    padding: 15px 20px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 12px;
-    color: white;
-    font-size: 16px;
-    transition: all 0.3s ease;
-  }
-  
-  /* Input focus state */
-  .inputField input:focus {
-    outline: none;
-    border-color: rgba(255, 255, 255, 0.5);
-    background: rgba(255, 255, 255, 0.15);
-    box-shadow: 0 0 0 4px rgba(220, 39, 67, 0.1);
-  }
-  
-  /* Input placeholder */
-  .inputField input::placeholder {
-    color: rgba(255, 255, 255, 0.6);
-  }
-  
-  /* Button styling */
-  .button {
-    background: linear-gradient(45deg, #f09433, #e6683c, #dc2743);
-    color: white;
-    padding: 15px;
-    border: none;
-    border-radius: 12px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-  
-  /* Button hover state */
-  .button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(220, 39, 67, 0.2);
-  }
-  
-  /* Button active state */
-  .button:active {
+  to {
+    opacity: 1;
     transform: translateY(0);
   }
-  
-  /* Error message styling */
-  .error {
-    color: #ff4444;
-    font-size: 14px;
-    text-align: center;
-    background: rgba(255, 68, 68, 0.1);
+}
+
+/* Loading state for button */
+.button.loading {
+  opacity: 0.8;
+  cursor: wait;
+}
+
+/* Success state for input */
+.inputField.success input {
+  border-color: #4CAF50;
+}
+
+/* Error state for input */
+.inputField.error input {
+  border-color: #ff4444;
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+  .formContainer {
+    padding: 30px 20px;
+  }
+
+  .title {
+    font-size: 1.3rem;
+  }
+
+  .inputField input {
+    padding: 12px 15px;
+  }
+
+  .button {
     padding: 12px;
-    border-radius: 8px;
-    border: 1px solid rgba(255, 68, 68, 0.2);
-    margin-top: -10px;
   }
-  
-  /* Link styling */
-  .link {
-    display: block;
-    text-align: center;
-    color: rgba(255, 255, 255, 0.7);
-    text-decoration: none;
-    margin-top: 30px;
-    font-size: 14px;
-    transition: all 0.3s ease;
-    padding: 10px;
+}
+
+/* Medium screens */
+@media (max-width: 768px) {
+  .formContainer {
+    max-width: 90%;
   }
-  
-  /* Link hover state */
-  .link:hover {
-    color: white;
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-  }
-  
-  /* Animation keyframes */
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  /* Loading state for button */
-  .button.loading {
-    opacity: 0.8;
-    cursor: wait;
-  }
-  
-  /* Success state for input */
-  .inputField.success input {
-    border-color: #4CAF50;
-  }
-  
-  /* Error state for input */
-  .inputField.error input {
-    border-color: #ff4444;
-  }
-  
-  /* Responsive design */
-  @media (max-width: 480px) {
-    .formContainer {
-      padding: 30px 20px;
-    }
-  
-    .title {
-      font-size: 1.3rem;
-    }
-  
-    .inputField input {
-      padding: 12px 15px;
-    }
-  
-    .button {
-      padding: 12px;
-    }
-  }
-  
-  /* Medium screens */
-  @media (max-width: 768px) {
-    .formContainer {
-      max-width: 90%;
-    }
-  }
-  
-  /* Custom scrollbar */
-  ::-webkit-scrollbar {
-    width: 8px;
-  }
-  
-  ::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.1);
-  }
-  
-  ::-webkit-scrollbar-thumb {
-    background: linear-gradient(45deg, #f09433, #e6683c, #dc2743);
-    border-radius: 4px;
-  }
-  
-  ::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(45deg, #dc2743, #cc2366, #bc1888);
-  }
-  
-  /* Focus visible outline */
-  :focus-visible {
-    outline: 2px solid #dc2743;
-    outline-offset: 2px;
-  }
-  
-  /* Disable autofill background */
-  input:-webkit-autofill,
-  input:-webkit-autofill:hover,
-  input:-webkit-autofill:focus {
-    -webkit-text-fill-color: white;
-    -webkit-box-shadow: 0 0 0px 1000px rgba(255, 255, 255, 0.1) inset;
-    transition: background-color 5000s ease-in-out 0s;
-  }
-  
-  /* Selection style */
-  ::selection {
-    background: rgba(220, 39, 67, 0.3);
-    color: white;
-  }
-  
-  /* Smooth transitions */
-  * {
-    transition: all 0.3s ease;
-  }
-  
-  /* Remove focus outline for mouse users */
-  *:focus:not(:focus-visible) {
-    outline: none;
-  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(45deg, #f09433, #e6683c, #dc2743);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(45deg, #dc2743, #cc2366, #bc1888);
+}
+
+/* Focus visible outline */
+:focus-visible {
+  outline: 2px solid #dc2743;
+  outline-offset: 2px;
+}
+
+/* Disable autofill background */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-text-fill-color: white;
+  -webkit-box-shadow: 0 0 0px 1000px rgba(255, 255, 255, 0.1) inset;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Selection style */
+::selection {
+  background: rgba(220, 39, 67, 0.3);
+  color: white;
+}
+
+/* Smooth transitions */
+* {
+  transition: all 0.3s ease;
+}
+
+/* Remove focus outline for mouse users */
+*:focus:not(:focus-visible) {
+  outline: none;
+}

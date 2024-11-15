@@ -1,144 +1,144 @@
 /* Navbar.module.css */
 .navbar {
-    background-color: rgba(28, 28, 30, 0.8);
-    backdrop-filter: blur(10px);
-    padding: 15px 0;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000;
+  background-color: rgba(28, 28, 30, 0.8);
+  backdrop-filter: blur(10px);
+  padding: 15px 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+.navbarContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.navbarLogo {
+  font-size: 24px;
+  font-weight: 600;
+  text-decoration: none;
+  background: linear-gradient(45deg, #FF416C, #FF4B2B);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: opacity 0.3s ease;
+}
+
+.navbarLogo:hover {
+  opacity: 0.8;
+}
+
+.navbarContent {
+  display: flex;
+  align-items: center;
+}
+
+.authenticatedNav {
+  display: flex;
+  align-items: center;
+}
+
+.navLinks {
+  display: flex;
+  margin-right: 20px;
+}
+
+.navLink {
+  color: #FFFFFF;
+  text-decoration: none;
+  margin-right: 20px;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.navLink:hover {
+  color: #FF416C;
+}
+
+.userSection {
+  display: flex;
+  align-items: center;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+}
+
+.userAvatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #FF416C, #FF4B2B);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  color: #FFFFFF;
+  margin-right: 10px;
+}
+
+.userName {
+  color: #FFFFFF;
+  font-weight: 500;
+}
+
+.logoutButton,
+.loginButton,
+.signupButton {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.logoutButton {
+  background: transparent;
+  color: #FFFFFF;
+  border: 1px solid #FF416C;
+}
+
+.logoutButton:hover {
+  background: rgba(255, 65, 108, 0.1);
+}
+
+.loginButton,
+.signupButton {
+  background: linear-gradient(45deg, #FF416C, #FF4B2B);
+  color: #FFFFFF;
+  border: none;
+  margin-left: 10px;
+}
+
+.loginButton:hover,
+.signupButton:hover {
+  background: linear-gradient(45deg, #FF4B2B, #FF416C);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(255, 65, 108, 0.2);
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
   }
-  
-  .navbarContainer {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px;
+  50% {
+    background-position: 100% 50%;
   }
-  
-  .navbarLogo {
-    font-size: 24px;
-    font-weight: 600;
-    text-decoration: none;
-    background: linear-gradient(45deg, #FF416C, #FF4B2B);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    transition: opacity 0.3s ease;
+  100% {
+    background-position: 0% 50%;
   }
-  
-  .navbarLogo:hover {
-    opacity: 0.8;
-  }
-  
-  .navbarContent {
-    display: flex;
-    align-items: center;
-  }
-  
-  .authenticatedNav {
-    display: flex;
-    align-items: center;
-  }
-  
-  .navLinks {
-    display: flex;
-    margin-right: 20px;
-  }
-  
-  .navLink {
-    color: #FFFFFF;
-    text-decoration: none;
-    margin-right: 20px;
-    font-weight: 500;
-    transition: color 0.3s ease;
-  }
-  
-  .navLink:hover {
-    color: #FF416C;
-  }
-  
-  .userSection {
-    display: flex;
-    align-items: center;
-  }
-  
-  .userInfo {
-    display: flex;
-    align-items: center;
-    margin-right: 20px;
-  }
-  
-  .userAvatar {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: linear-gradient(45deg, #FF416C, #FF4B2B);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: bold;
-    color: #FFFFFF;
-    margin-right: 10px;
-  }
-  
-  .userName {
-    color: #FFFFFF;
-    font-weight: 500;
-  }
-  
-  .logoutButton,
-  .loginButton,
-  .signupButton {
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-weight: 600;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    cursor: pointer;
-  }
-  
-  .logoutButton {
-    background: transparent;
-    color: #FFFFFF;
-    border: 1px solid #FF416C;
-  }
-  
-  .logoutButton:hover {
-    background: rgba(255, 65, 108, 0.1);
-  }
-  
-  .loginButton,
-  .signupButton {
-    background: linear-gradient(45deg, #FF416C, #FF4B2B);
-    color: #FFFFFF;
-    border: none;
-    margin-left: 10px;
-  }
-  
-  .loginButton:hover,
-  .signupButton:hover {
-    background: linear-gradient(45deg, #FF4B2B, #FF416C);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 6px rgba(255, 65, 108, 0.2);
-  }
-  
-  @keyframes gradientShift {
-    0% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
-    100% {
-      background-position: 0% 50%;
-    }
-  }
-  
-  .loginButton,
-  .signupButton {
-    background-size: 200% 200%;
-    animation: gradientShift 3s ease infinite;
-  }
+}
+
+.loginButton,
+.signupButton {
+  background-size: 200% 200%;
+  animation: gradientShift 3s ease infinite;
+}

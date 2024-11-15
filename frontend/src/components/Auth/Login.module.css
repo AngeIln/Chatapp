@@ -1,83 +1,83 @@
 .loginContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #000000;
-  }
-  
-  .loginBox {
-    background-color: #1C1C1E;
-    padding: 2rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 400px;
-  }
-  
-  .title {
-    color: #FFFFFF;
-    text-align: center;
-    margin-bottom: 2rem;
-    font-size: 1.5rem;
-  }
-  
-  .form {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .inputGroup {
-    margin-bottom: 1rem;
-  }
-  
-  .inputGroup label {
-    display: block;
-    color: #FFFFFF;
-    margin-bottom: 0.5rem;
-    font-size: 0.9rem;
-  }
-  
-  .input {
-    width: 100%;
-    padding: 0.75rem;
-    border: none;
-    border-radius: 5px;
-    background-color: #2C2C2E;
-    color: #FFFFFF;
-    font-size: 1rem;
-  }
-  
-  .submitButton {
-    background: linear-gradient(45deg, #FF416C, #FF4B2B);
-    border: none;
-    color: white;
-    padding: 0.75rem;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 1rem;
-    font-weight: bold;
-    margin-top: 1rem;
-  }
-  
-  .submitButton:hover {
-    background: linear-gradient(45deg, #FF4B2B, #FF416C);
-    box-shadow: 0 2px 10px rgba(255, 75, 43, 0.3);
-  }
-  
-  .error {
-    color: #FF416C;
-    text-align: center;
-    margin-top: 1rem;
-    font-size: 0.9rem;
-  }
-  
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-  
-  .loginBox {
-    animation: fadeIn 0.5s ease-in-out;
-  }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #000000;
+}
+
+.loginBox {
+  background-color: #1C1C1E;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+.title {
+  color: #FFFFFF;
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 1.5rem;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.inputGroup {
+  margin-bottom: 1rem;
+}
+
+.inputGroup label {
+  display: block;
+  color: #FFFFFF;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.input {
+  width: 100%;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 5px;
+  background-color: #2C2C2E;
+  color: #FFFFFF;
+  font-size: 1rem;
+}
+
+.submitButton {
+  background: linear-gradient(45deg, #FF416C, #FF4B2B);
+  border: none;
+  color: white;
+  padding: 0.75rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+  font-weight: bold;
+  margin-top: 1rem;
+}
+
+.submitButton:hover {
+  background: linear-gradient(45deg, #FF4B2B, #FF416C);
+  box-shadow: 0 2px 10px rgba(255, 75, 43, 0.3);
+}
+
+.error {
+  color: #FF416C;
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.loginBox {
+  animation: fadeIn 0.5s ease-in-out;
+}

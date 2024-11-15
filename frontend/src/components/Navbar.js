@@ -1,4 +1,3 @@
-// Navbar.jsx
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
@@ -25,7 +24,6 @@ function Navbar() {
                   Profil
                 </Link>
               </div>
-              
               <div className={styles.userSection}>
                 <div className={styles.userInfo}>
                   <div className={styles.userAvatar}>
@@ -35,10 +33,7 @@ function Navbar() {
                     {user.name || user.email}
                   </span>
                 </div>
-                <button 
-                  onClick={logout} 
-                  className={styles.logoutButton}
-                >
+                <button onClick={logout} className={styles.logoutButton}>
                   Déconnexion
                 </button>
               </div>

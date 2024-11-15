@@ -1,6 +1,5 @@
 from fastapi import FastAPI, Depends, HTTPException, status
 from typing import List
-from fastapi.middleware.cors import CORSMiddleware
 from models import *
 from authentication import *
 from config import *
@@ -9,10 +8,12 @@ from bson.objectid import ObjectId
 import bcrypt
 import os
 from fastapi import FastAPI
-
-
-
+from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
+
+
+
+
 
 # CORS Configuration
 app.add_middleware(
@@ -145,7 +146,7 @@ def read_current_user(current_user: UserInDB = Depends(get_current_user)):
 def get_all_users(current_user: UserInDB = Depends(get_current_user)):
     users = users_collection.find({})
     return [UserBase(name=user["name"]) for user in users]
-
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+#
+#if __name__ == "__main__":
+#    import uvicorn
+#    uvicorn.run(app, host="0.0.0.0", port=8000)
