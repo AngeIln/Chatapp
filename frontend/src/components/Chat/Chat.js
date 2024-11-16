@@ -1,4 +1,4 @@
-// Chat.jsx
+// src/components/Chat/Chat.jsx
 import React, { useEffect, useState, useContext, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -19,7 +19,7 @@ function Chat() {
   const [message, setMessage] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false); // État pour le modal
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const messagesEndRef = useRef(null);
 
   // Animation variants
@@ -82,7 +82,7 @@ function Chat() {
     try {
       const newMessage = {
         content: message,
-        sender: user.id,
+        sender: user.name, // Use user.name instead of user.id
         timestamp: new Date().toISOString()
       };
 
@@ -131,11 +131,18 @@ function Chat() {
       navigate(`/chat/${response.data.id}`);
     } catch (error) {
       console.error('Error creating conversation:', error);
+      // Optionally set error state here
     }
   };
 
   return (
-    <div className={styles.container}>
+    <motion.div
+      className={styles.container}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+    >
       {/* Sidebar */}
       <motion.aside
         className={`${styles.sidebar} ${isMobileMenuOpen ? styles.sidebarOpen : ''}`}
@@ -150,7 +157,7 @@ function Chat() {
             whileTap={{ scale: 0.95 }}
             onClick={() => navigate('/profile')}
           >
-            <div className={styles.userAvatar}>{user.name[0]}</div>
+            <div className={styles.userAvatar}>{user.name[0].toUpperCase()}</div>
             <h3>{user.name}</h3>
           </motion.div>
         </div>
@@ -191,7 +198,7 @@ function Chat() {
                 }}
               >
                 <div className={styles.conversationAvatar}>
-                  {(conv.name || '?')[0]}
+                  {(conv.name || '?')[0].toUpperCase()}
                 </div>
                 <div className={styles.conversationInfo}>
                   <h4>{conv.name || 'Conversation sans nom'}</h4>
@@ -234,7 +241,7 @@ function Chat() {
                   <motion.div
                     key={index}
                     className={`${styles.message} ${
-                      msg.sender === user.id ? styles.sent : styles.received
+                      msg.sender === user.name ? styles.sent : styles.received
                     }`}
                     variants={messageVariants}
                     initial="hidden"
@@ -258,12 +265,14 @@ function Chat() {
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder="Écrivez votre message..."
                 whileFocus={{ scale: 1.01 }}
+                className={styles.messageInput}
               />
               <motion.button
                 type="submit"
                 disabled={!message.trim()}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                className={styles.sendButton}
               >
                 <IoSend />
               </motion.button>
@@ -302,7 +311,7 @@ function Chat() {
           onCreate={handleCreateConversation}
         />
       )}
-    </div>
+    </motion.div>
   );
 }
 

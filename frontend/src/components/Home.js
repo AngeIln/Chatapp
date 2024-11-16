@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import styles from './Home.module.css';
 import backgroundVideo from './Space.mp4';
 
-
 function Home() {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -69,7 +68,7 @@ function Home() {
         ref={el => sectionsRef.current[0] = el}
       >
         <div className={styles.contentWrapper}>
-          {user ? (
+          {user.name ? (
             <div className={styles.authenticatedContent}>
               <div className={styles.avatarWrapper}>
                 <div className={styles.avatar}>

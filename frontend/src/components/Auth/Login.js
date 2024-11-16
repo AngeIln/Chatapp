@@ -2,6 +2,7 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import styles from './Login.module.css';
 
 function Login() {
@@ -22,7 +23,12 @@ function Login() {
   };
 
   return (
-    <div className={styles.loginContainer}>
+    <motion.div
+      className={styles.loginContainer}
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5 }}
+    >
       <div className={styles.loginBox}>
         <h2 className={styles.title}>Se connecter</h2>
         <form onSubmit={handleSubmit} className={styles.form}>
@@ -54,7 +60,7 @@ function Login() {
         </form>
         {error && <p className={styles.error}>{error}</p>}
       </div>
-    </div>
+    </motion.div>
   );
 }
 

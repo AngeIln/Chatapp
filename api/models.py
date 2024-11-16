@@ -20,7 +20,7 @@ class User(UserBase):
 # Modèles pour les messages
 class Message(BaseModel):
     sender: str
-    message: str
+    content: str
     timestamp: datetime = Field(default_factory=datetime.utcnow)
 
 # Modèles pour les conversations

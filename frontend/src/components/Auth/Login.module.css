@@ -1,25 +1,25 @@
+/* src/components/Auth/Login.module.css */
 .loginContainer {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   height: 100vh;
-  background-color: #000000;
+  background-color: #f5f5f5;
 }
 
 .loginBox {
-  background-color: #1C1C1E;
-  padding: 2rem;
-  border-radius: 10px;
+  background-color: #ffffff;
+  padding: 40px 60px;
+  border-radius: 15px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 400px;
+  width: 400px;
 }
 
 .title {
-  color: #FFFFFF;
   text-align: center;
-  margin-bottom: 2rem;
-  font-size: 1.5rem;
+  margin-bottom: 30px;
+  font-size: 1.8rem;
+  color: #333333;
 }
 
 .form {
@@ -28,56 +28,48 @@
 }
 
 .inputGroup {
-  margin-bottom: 1rem;
+  margin-bottom: 20px;
 }
 
 .inputGroup label {
   display: block;
-  color: #FFFFFF;
-  margin-bottom: 0.5rem;
-  font-size: 0.9rem;
+  margin-bottom: 8px;
+  font-size: 1rem;
+  color: #555555;
 }
 
 .input {
   width: 100%;
-  padding: 0.75rem;
-  border: none;
-  border-radius: 5px;
-  background-color: #2C2C2E;
-  color: #FFFFFF;
+  padding: 10px 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
   font-size: 1rem;
+  outline: none;
+  transition: border 0.3s;
+}
+
+.input:focus {
+  border-color: #007BFF;
 }
 
 .submitButton {
-  background: linear-gradient(45deg, #FF416C, #FF4B2B);
+  padding: 12px;
+  background-color: #007BFF;
   border: none;
-  color: white;
-  padding: 0.75rem;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  border-radius: 20px;
+  color: #ffffff;
   font-size: 1rem;
-  font-weight: bold;
-  margin-top: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
 .submitButton:hover {
-  background: linear-gradient(45deg, #FF4B2B, #FF416C);
-  box-shadow: 0 2px 10px rgba(255, 75, 43, 0.3);
+  background-color: #0056b3;
 }
 
 .error {
-  color: #FF416C;
+  margin-top: 15px;
   text-align: center;
-  margin-top: 1rem;
-  font-size: 0.9rem;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-.loginBox {
-  animation: fadeIn 0.5s ease-in-out;
+  color: #ff4d4f;
+  font-weight: 500;
 }

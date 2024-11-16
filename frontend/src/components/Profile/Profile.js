@@ -1,4 +1,3 @@
-// Profile.jsx
 import React, { useState, useEffect, useContext } from 'react';
 import axios from '../../utils/api';
 import { AuthContext } from '../../contexts/AuthContext';
@@ -54,7 +53,7 @@ function Profile() {
           {editing ? (
             <div className={styles.editContainer}>
               <textarea
-                value={bio}
+                value={bio || ''}
                 onChange={(e) => setBio(e.target.value)}
                 className={styles.bioInput}
                 placeholder="Écrivez quelque chose à propos de vous..."

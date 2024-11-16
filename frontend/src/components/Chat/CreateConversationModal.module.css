@@ -1,188 +1,203 @@
 /* CreateConversationModal.module.css */
-
 .overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    z-index: 5;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(12px);
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+}
+
+.modal {
+  background: #000000;
+  border-radius: 24px;
+  padding: 2.5rem;
+  width: min(90vw, 480px);
+  color: #ffffff;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modal h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  margin-bottom: 2rem;
+  color: #ffffff;
+}
+
+.inputGroup {
+  margin-bottom: 2rem;
+}
+
+.inputGroup label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 0.025em;
+}
+
+.inputGroup input {
+  width: 100%;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  color: #ffffff;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.inputGroup input:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.inputGroup input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.usersList {
+  max-height: 200px;
+  overflow-y: auto;
+  margin-top: 1rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 0.75rem;
+}
+
+.usersList::-webkit-scrollbar {
+  width: 4px;
+}
+
+.usersList::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+.userItem,
+.participantItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.2s ease;
+}
+
+.userItem:hover,
+.participantItem:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.userItem span,
+.participantItem span {
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.userItem button,
+.participantItem button {
+  border: none;
+  padding: 0.625rem 1rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.userItem button {
+  background: #ffffff;
+  color: #000000;
+}
+
+.userItem button:hover {
+  background: rgba(255, 255, 255, 0.9);
+  transform: translateY(-1px);
+}
+
+.participantItem button {
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.participantItem button:hover {
+  background: rgba(255, 0, 0, 0.1);
+  color: #ff4444;
+  border-color: rgba(255, 68, 68, 0.3);
+}
+
+.participants {
+  margin: 2rem 0;
+}
+
+.participants h3 {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 1rem;
+  letter-spacing: 0.025em;
+}
+
+.error {
+  color: #ff4444;
+  font-size: 0.875rem;
+  margin-bottom: 1.5rem;
+}
+
+.buttonGroup {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2.5rem;
+}
+
+.buttonGroup button {
+  padding: 0.875rem 1.5rem;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.cancelButton {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.createButton {
+  background: #ffffff;
+  color: #000000;
+}
+
+.cancelButton:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.createButton:hover {
+  background: rgba(255, 255, 255, 0.9);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 480px) {
   .modal {
-    background: #0a0a0a;
-    border-radius: 20px;
     padding: 2rem;
-    width: 100%;
-    max-width: 500px;
-    position: relative;
-    overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.1);
   }
-  
-  .modal h2 {
-    color: white;
-    margin-bottom: 1.5rem;
+
+  .buttonGroup button {
+    padding: 0.75rem 1.25rem;
   }
-  
-  .inputGroup {
-    margin-bottom: 1.5rem;
-  }
-  
-  .inputGroup label {
-    color: white;
-    display: block;
-    margin-bottom: 0.5rem;
-  }
-  
-  .inputGroup input {
-    width: 100%;
-    padding: 0.8rem 1rem;
-    background: rgba(255, 255, 255, 0.05);
-    border: none;
-    border-radius: 10px;
-    color: white;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-  }
-  
-  .inputGroup input::placeholder {
-    color: rgba(255, 255, 255, 0.7);
-  }
-  
-  .inputGroup input:focus {
-    outline: none;
-    border-color: #FF416C;
-    box-shadow: 0 0 10px rgba(255, 65, 108, 0.2);
-  }
-  
-  .usersList {
-    max-height: 150px;
-    overflow-y: auto;
-    margin-top: 0.5rem;
-  }
-  
-  .userItem {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: rgba(255, 255, 255, 0.05);
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    margin-bottom: 0.3rem;
-  }
-  
-  .userItem span {
-    color: white;
-  }
-  
-  .userItem button {
-    background: #2ed573;
-    color: white;
-    border: none;
-    padding: 0.3rem 0.8rem;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-  }
-  
-  .userItem button:hover {
-    transform: scale(1.05);
-  }
-  
-  .participants {
-    margin-bottom: 1.5rem;
-  }
-  
-  .participants h3 {
-    color: white;
-    margin-bottom: 0.5rem;
-  }
-  
-  .participantItem {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: rgba(255, 255, 255, 0.05);
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    margin-bottom: 0.3rem;
-  }
-  
-  .participantItem span {
-    color: white;
-  }
-  
-  .participantItem button {
-    background: #ff4757;
-    color: white;
-    border: none;
-    padding: 0.3rem 0.8rem;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-  }
-  
-  .participantItem button:hover {
-    transform: scale(1.05);
-  }
-  
-  .buttonGroup {
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
-  }
-  
-  .cancelButton {
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
-    border: none;
-    padding: 0.8rem 2rem;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-  
-  .createButton {
-    background: linear-gradient(45deg, #FF416C, #FF4B2B);
-    color: white;
-    border: none;
-    padding: 0.8rem 2rem;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-  
-  .cancelButton:hover {
-    background: rgba(255, 255, 255, 0.2);
-  }
-  
-  .createButton:hover {
-    box-shadow: 0 5px 15px rgba(255, 65, 108, 0.4);
-  }
-  
-  @media (max-width: 480px) {
-    .modal {
-      padding: 1.5rem;
-    }
-  
-    .inputGroup input {
-      font-size: 0.9rem;
-    }
-  
-    .userItem button,
-    .participantItem button {
-      padding: 0.3rem 0.6rem;
-      font-size: 0.9rem;
-    }
-  
-    .cancelButton,
-    .createButton {
-      padding: 0.6rem 1.5rem;
-      font-size: 0.9rem;
-    }
-  }
+}

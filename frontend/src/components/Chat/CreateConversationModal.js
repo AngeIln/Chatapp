@@ -1,4 +1,4 @@
-// CreateConversationModal.jsx
+// src/components/Chat/CreateConversationModal.jsx
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import styles from './CreateConversationModal.module.css';
@@ -9,6 +9,7 @@ function CreateConversationModal({ onClose, onCreate }) {
   const [participants, setParticipants] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
   const [searchUser, setSearchUser] = useState('');
+  const [error, setError] = useState('');
 
   useEffect(() => {
     fetchAllUsers();
@@ -20,35 +21,38 @@ function CreateConversationModal({ onClose, onCreate }) {
       setAllUsers(response.data);
     } catch (error) {
       console.error('Error fetching users:', error);
+      setError('Erreur lors du chargement des utilisateurs.');
     }
   };
 
-  const handleAddParticipant = (user) => {
-    if (!participants.find(p => p.id === user.id)) {
-      setParticipants([...participants, user]);
+  const handleAddParticipant = (userName) => {
+    if (!participants.includes(userName)) {
+      setParticipants([...participants, userName]);
     }
   };
 
-  const handleRemoveParticipant = (user) => {
-    setParticipants(participants.filter(p => p.id !== user.id));
+  const handleRemoveParticipant = (userName) => {
+    setParticipants(participants.filter(p => p !== userName));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!name.trim() || participants.length === 0) return;
-
-    const participantIds = participants.map(p => p.id);
+    if (!name.trim() || participants.length === 0) {
+      setError('Veuillez entrer un nom de conversation et ajouter des participants.');
+      return;
+    }
 
     const conversationData = {
       name: name.trim(),
-      participants: participantIds
+      participants: participants // Already names
     };
 
     onCreate(conversationData);
   };
 
   const filteredUsers = allUsers.filter(user =>
-    user.name.toLowerCase().includes(searchUser.toLowerCase())
+    user.name.toLowerCase().includes(searchUser.toLowerCase()) &&
+    user.name !== '' // Remplacez par `user.name !== currentUserName` si nécessaire
   );
 
   return (
@@ -57,6 +61,8 @@ function CreateConversationModal({ onClose, onCreate }) {
         className={styles.modal}
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.9 }}
+        transition={{ duration: 0.3 }}
       >
         <h2>Créer une nouvelle conversation</h2>
         <form onSubmit={handleSubmit}>
@@ -80,9 +86,9 @@ function CreateConversationModal({ onClose, onCreate }) {
             />
             <div className={styles.usersList}>
               {filteredUsers.map(user => (
-                <div key={user.id} className={styles.userItem}>
+                <div key={user.name} className={styles.userItem}>
                   <span>{user.name}</span>
-                  <button type="button" onClick={() => handleAddParticipant(user)}>
+                  <button type="button" onClick={() => handleAddParticipant(user.name)}>
                     Ajouter
                   </button>
                 </div>
@@ -92,15 +98,17 @@ function CreateConversationModal({ onClose, onCreate }) {
 
           <div className={styles.participants}>
             <h3>Participants :</h3>
-            {participants.map(user => (
-              <div key={user.id} className={styles.participantItem}>
-                <span>{user.name}</span>
-                <button type="button" onClick={() => handleRemoveParticipant(user)}>
+            {participants.map(name => (
+              <div key={name} className={styles.participantItem}>
+                <span>{name}</span>
+                <button type="button" onClick={() => handleRemoveParticipant(name)}>
                   Retirer
                 </button>
               </div>
             ))}
           </div>
+
+          {error && <div className={styles.error}>{error}</div>}
 
           <div className={styles.buttonGroup}>
             <button type="button" onClick={onClose} className={styles.cancelButton}>

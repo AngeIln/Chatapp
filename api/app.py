@@ -1,4 +1,3 @@
-# main.py ou app.py
 from fastapi import FastAPI, Depends, HTTPException, status
 from typing import List, Optional
 from fastapi.middleware.cors import CORSMiddleware
@@ -9,21 +8,18 @@ from database import *
 from bson.objectid import ObjectId
 import bcrypt
 from pydantic import BaseModel
+from datetime import timedelta
 
 app = FastAPI()
 
 # Configuration CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # À ajuster en production
+    allow_origins=["http://localhost:3000"],  # Adjust based on your frontend's URL
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-@app.get("/")
-def read_root():
-    return {"message": "Hello, world!"}
 
 # Modèle pour la mise à jour de la bio
 class BioUpdate(BaseModel):
@@ -46,9 +42,13 @@ def signup(user: UserCreate):
         "bio": user.bio or ""  # Initialiser la bio
     }
     result = users_collection.insert_one(user_doc)
-    return User(id=str(result.inserted_id), name=user.name, bio=user.bio or "")
+    return User(
+        id=str(result.inserted_id),
+        name=user.name,
+        bio=user.bio or ""
+    )
 
-# Connexion d'un utilisateur
+# Connexion d'un utilisateur (Endpoint token mis à jour)
 @app.post("/login")
 def login(form_data: UserCreate):
     user = authenticate_user(users_collection, form_data.name, form_data.password)
@@ -59,15 +59,22 @@ def login(form_data: UserCreate):
     access_token = create_access_token(
         data={"sub": user.name}, expires_delta=access_token_expires
     )
-    return {"access_token": access_token, "token_type": "bearer"}
+    return {
+        "access_token": access_token,
+        "token_type": "bearer"
+    }
 
 # ---- Gestion des bios ----
 
 # Récupérer le profil de l'utilisateur courant
-@app.get("/users/me", response_model=UserBase)
+@app.get("/users/me", response_model=User)
 def read_current_user(current_user: UserInDB = Depends(get_current_user)):
     user = users_collection.find_one({"name": current_user.name})
-    return UserBase(name=user["name"], bio=user.get("bio", ""))
+    return User(
+        id=str(user["_id"]),
+        name=user["name"],
+        bio=user.get("bio", "")
+    )
 
 # Mettre à jour la bio de l'utilisateur courant
 @app.put("/users/me/bio", response_model=UserBase)
@@ -199,8 +206,3 @@ def delete_conversation(conversation_id: str, current_user: UserInDB = Depends(g
 
     conversations_collection.delete_one({"_id": ObjectId(conversation_id)})
     return {"detail": "Conversation supprimée"}
-
-# Vous pouvez retirer le code suivant si vous utilisez un serveur ASGI comme Uvicorn ou Gunicorn en production
-# if __name__ == "__main__":
-#     import uvicorn
-#     uvicorn.run(app, host="0.0.0.0", port=8000)

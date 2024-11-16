@@ -1,29 +1,34 @@
 /* Navbar.module.css */
+
 .navbar {
-  background-color: rgba(28, 28, 30, 0.8);
-  backdrop-filter: blur(10px);
-  padding: 15px 0;
+  background: rgba(28, 28, 30, 0.8); /* Slightly lighter than the main container */
+  backdrop-filter: blur(15px);
+  padding: 1rem 2rem;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.3s ease;
 }
 
 .navbarContainer {
   max-width: 1200px;
-  margin: 0 auto;
+  width: 100%;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 0 20px;
+  justify-content: space-between;
+  margin: 0 auto;
 }
 
 .navbarLogo {
-  font-size: 24px;
-  font-weight: 600;
+  font-size: 1.8rem;
+  font-weight: 700;
   text-decoration: none;
-  background: linear-gradient(45deg, #FF416C, #FF4B2B);
+  background: linear-gradient(135deg, #FF416C, #FF4B2B);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   transition: opacity 0.3s ease;
@@ -45,19 +50,31 @@
 
 .navLinks {
   display: flex;
-  margin-right: 20px;
+  gap: 1.5rem;
+  margin-right: 1.5rem;
 }
 
 .navLink {
   color: #FFFFFF;
   text-decoration: none;
-  margin-right: 20px;
   font-weight: 500;
+  position: relative;
   transition: color 0.3s ease;
 }
 
-.navLink:hover {
-  color: #FF416C;
+.navLink::after {
+  content: '';
+  position: absolute;
+  width: 0%;
+  height: 2px;
+  left: 0;
+  bottom: -4px;
+  background: linear-gradient(90deg, #FF416C, #FF4B2B);
+  transition: width 0.3s ease;
+}
+
+.navLink:hover::after {
+  width: 100%;
 }
 
 .userSection {
@@ -68,77 +85,61 @@
 .userInfo {
   display: flex;
   align-items: center;
-  margin-right: 20px;
+  margin-right: 1rem;
 }
 
 .userAvatar {
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #FF416C, #FF4B2B);
+  color: white;
   border-radius: 50%;
-  background: linear-gradient(45deg, #FF416C, #FF4B2B);
   display: flex;
-  justify-content: center;
   align-items: center;
-  font-weight: bold;
-  color: #FFFFFF;
-  margin-right: 10px;
+  justify-content: center;
+  font-size: 1rem;
+  margin-right: 0.5rem;
+  transition: box-shadow 0.3s ease;
+}
+
+.userAvatar:hover {
+  box-shadow: 0 0 10px rgba(255, 65, 108, 0.6);
 }
 
 .userName {
-  color: #FFFFFF;
+  color: white;
+  font-size: 1rem;
   font-weight: 500;
 }
 
-.logoutButton,
-.loginButton,
-.signupButton {
-  padding: 8px 16px;
+.logoutButton, .loginButton, .signupButton {
+  padding: 0.5rem 1rem;
   border-radius: 20px;
   font-weight: 600;
-  text-decoration: none;
-  transition: all 0.3s ease;
+  border: none;
   cursor: pointer;
+  transition: background 0.3s ease, transform 0.3s ease;
 }
 
 .logoutButton {
-  background: transparent;
-  color: #FFFFFF;
-  border: 1px solid #FF416C;
+  background: linear-gradient(135deg, #FF416C, #FF4B2B);
+  color: white;
 }
 
 .logoutButton:hover {
-  background: rgba(255, 65, 108, 0.1);
-}
-
-.loginButton,
-.signupButton {
-  background: linear-gradient(45deg, #FF416C, #FF4B2B);
-  color: #FFFFFF;
-  border: none;
-  margin-left: 10px;
-}
-
-.loginButton:hover,
-.signupButton:hover {
-  background: linear-gradient(45deg, #FF4B2B, #FF416C);
+  background: linear-gradient(135deg, #FF4B2B, #FF416C);
   transform: translateY(-2px);
-  box-shadow: 0 4px 6px rgba(255, 65, 108, 0.2);
+  box-shadow: 0 4px 6px rgba(255, 65, 108, 0.3);
 }
 
-@keyframes gradientShift {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
+.loginButton, .signupButton {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  margin-left: 0.5rem;
 }
 
-.loginButton,
-.signupButton {
-  background-size: 200% 200%;
-  animation: gradientShift 3s ease infinite;
+.loginButton:hover, .signupButton:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(255, 255, 255, 0.3);
 }

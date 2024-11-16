@@ -1,18 +1,26 @@
-// src/contexts/AuthContext.js
 import React, { createContext, useState, useEffect } from 'react';
 import axios from '../utils/api';
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState({
+    id: '',
+    name: '',
+    bio: ''
+  });
 
   // Charger l'utilisateur depuis le localStorage au démarrage
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     const storedToken = localStorage.getItem('token');
     if (storedUser && storedToken) {
-      setUser(JSON.parse(storedUser));
+      const parsedUser = JSON.parse(storedUser);
+      setUser({
+        id: parsedUser.id || '',
+        name: parsedUser.name || '',
+        bio: parsedUser.bio || ''
+      });
       axios.defaults.headers.common['Authorization'] = `Bearer ${storedToken}`;
     }
   }, []);
@@ -28,8 +36,13 @@ export const AuthProvider = ({ children }) => {
 
     // Récupérer les informations de l'utilisateur courant
     const userResponse = await axios.get('/users/me');
-    localStorage.setItem('user', JSON.stringify(userResponse.data));
-    setUser(userResponse.data);
+    const fetchedUser = userResponse.data;
+    localStorage.setItem('user', JSON.stringify(fetchedUser));
+    setUser({
+      id: fetchedUser.id || '',
+      name: fetchedUser.name || '',
+      bio: fetchedUser.bio || ''
+    });
   };
 
   const signup = async (username, password) => {
@@ -45,7 +58,11 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('user');
     localStorage.removeItem('token');
     delete axios.defaults.headers.common['Authorization'];
-    setUser(null);
+    setUser({
+      id: '',
+      name: '',
+      bio: ''
+    });
   };
 
   return (
