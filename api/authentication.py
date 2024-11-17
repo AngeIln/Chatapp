@@ -1,6 +1,8 @@
+# api/authentication.py
 from datetime import datetime, timedelta
 from typing import Optional
-from jose import JWTError, jwt
+import jwt
+from jwt.exceptions import PyJWTError as JWTError
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from database import users_collection
@@ -8,20 +10,17 @@ from models import UserInDB
 from config import SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES
 import bcrypt
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
-# Fonction pour vérifier le mot de passe
 def verify_password(plain_password, hashed_password):
     return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password.encode('utf-8'))
 
-# Fonction pour récupérer un utilisateur depuis la base de données
 def get_user(db, username: str):
     user = db.find_one({"name": username})
     if user:
-        return UserInDB(name=user["name"], hashed_password=user["password"])
+        return UserInDB(name=user["name"], hashed_password=user["password"], avatar_url=user.get("avatar_url"))
     return None
 
-# Fonction pour authentifier un utilisateur
 def authenticate_user(db, username: str, password: str):
     user = get_user(db, username)
     if not user:
@@ -30,18 +29,17 @@ def authenticate_user(db, username: str, password: str):
         return False
     return user
 
-# Fonction pour créer un token JWT
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     to_encode = data.copy()
     expire = datetime.utcnow() + (expires_delta if expires_delta else timedelta(minutes=15))
     to_encode.update({"exp": expire})
-    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
 
-# Dépendance pour obtenir l'utilisateur courant
 async def get_current_user(token: str = Depends(oauth2_scheme)):
     credentials_exception = HTTPException(
-        status_code=401,
-        detail="Impossible de valider les informations d'identification",
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Unable to validate credentials",
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:

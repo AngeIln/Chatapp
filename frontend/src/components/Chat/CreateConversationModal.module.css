@@ -1,4 +1,4 @@
-/* CreateConversationModal.module.css */
+/* frontend/src/components/Chat/CreateConversationModal.module.css */
 .overlay {
   position: fixed;
   inset: 0;
@@ -11,7 +11,7 @@
 }
 
 .modal {
-  background: #000000;
+  background: #1e1e1e;
   border-radius: 24px;
   padding: 2.5rem;
   width: min(90vw, 480px);
@@ -45,7 +45,7 @@
   width: 100%;
   padding: 1rem;
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 12px;
   color: #ffffff;
   font-size: 1rem;
@@ -54,12 +54,8 @@
 
 .inputGroup input:focus {
   outline: none;
-  border-color: rgba(255, 255, 255, 0.3);
+  border-color: #FF416C;
   background: rgba(255, 255, 255, 0.08);
-}
-
-.inputGroup input::placeholder {
-  color: rgba(255, 255, 255, 0.4);
 }
 
 .usersList {
@@ -107,7 +103,7 @@
 .userItem button,
 .participantItem button {
   border: none;
-  padding: 0.625rem 1rem;
+  padding: 0.5rem 1rem;
   border-radius: 8px;
   font-size: 0.875rem;
   font-weight: 500;
@@ -116,25 +112,23 @@
 }
 
 .userItem button {
-  background: #ffffff;
-  color: #000000;
+  background: #FF416C;
+  color: #ffffff;
 }
 
 .userItem button:hover {
-  background: rgba(255, 255, 255, 0.9);
+  background: #FF4B2B;
   transform: translateY(-1px);
 }
 
 .participantItem button {
-  background: transparent;
-  color: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 68, 68, 0.2);
+  color: #ff4444;
+  border: 1px solid rgba(255, 68, 68, 0.3);
 }
 
 .participantItem button:hover {
-  background: rgba(255, 0, 0, 0.1);
-  color: #ff4444;
-  border-color: rgba(255, 68, 68, 0.3);
+  background: rgba(255, 68, 68, 0.3);
 }
 
 .participants {
@@ -162,25 +156,26 @@
   margin-top: 2.5rem;
 }
 
-.buttonGroup button {
-  padding: 0.875rem 1.5rem;
-  border-radius: 12px;
-  font-size: 0.875rem;
-  font-weight: 500;
-  cursor: pointer;
-  border: none;
-  transition: all 0.2s ease;
-}
-
 .cancelButton {
+  padding: 0.875rem 1.5rem;
   background: rgba(255, 255, 255, 0.05);
-  color: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
 }
 
 .createButton {
-  background: #ffffff;
-  color: #000000;
+  padding: 0.875rem 1.5rem;
+  background: #FF416C;
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
 }
 
 .cancelButton:hover {
@@ -188,16 +183,6 @@
 }
 
 .createButton:hover {
-  background: rgba(255, 255, 255, 0.9);
+  background: #FF4B2B;
   transform: translateY(-1px);
-}
-
-@media (max-width: 480px) {
-  .modal {
-    padding: 2rem;
-  }
-
-  .buttonGroup button {
-    padding: 0.75rem 1.25rem;
-  }
 }

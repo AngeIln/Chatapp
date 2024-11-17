@@ -563,7 +563,49 @@
     font-size: 1rem;
   }
 }
+/* frontend/src/components/Chat/Chat.module.css */
 
+/* Existing styles... */
+
+.searchResults {
+  position: absolute;
+  top: 60px;
+  left: 320px; /* Adjust based on sidebar width */
+  width: 300px;
+  max-height: 400px;
+  overflow-y: auto;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 1rem;
+  z-index: 10;
+}
+
+.searchResultItem {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.searchResultItem:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.conversationAvatar {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #FF416C, #FF4B2B);
+  color: white;
+  border-radius: 50%;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1rem;
+}
 /* Accessibility: Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
   * {

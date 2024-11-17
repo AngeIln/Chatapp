@@ -1,19 +1,30 @@
-// src/components/Chat/Chat.jsx
+// frontend/src/components/Chat/Chat.jsx
+
 import React, { useEffect, useState, useContext, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from '../../utils/api';
 import { AuthContext } from '../../contexts/AuthContext';
-import { IoSend, IoMenu, IoSearch, IoEllipsisVertical, IoAdd } from 'react-icons/io5';
+import {
+  IoSend,
+  IoMenu,
+  IoSearch,
+  IoEllipsisVertical,
+  IoAdd,
+  IoImage,
+  IoDocument
+} from 'react-icons/io5';
 import styles from './Chat.module.css';
 
-// Importer le composant Modal
+// Import Modal and other components
 import CreateConversationModal from './CreateConversationModal';
+import MessageReactions from './MessageReactions';
 
 function Chat() {
   const { conversationId } = useParams();
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
+
   const [conversations, setConversations] = useState([]);
   const [currentConversation, setCurrentConversation] = useState(null);
   const [message, setMessage] = useState('');
@@ -21,11 +32,18 @@ function Chat() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const messagesEndRef = useRef(null);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [usersMap, setUsersMap] = useState({});
+  const [loadingConversations, setLoadingConversations] = useState(true);
+  const [loadingMessages, setLoadingMessages] = useState(true);
+  const [fetchInterval, setFetchInterval] = useState(null);
+  const [lastMessageId, setLastMessageId] = useState(null);
+  const [typingStatus, setTypingStatus] = useState('');
 
   // Animation variants
   const sidebarVariants = {
     hidden: { x: -300, opacity: 0 },
-    visible: { x: 0, opacity: 1, transition: { type: "spring", damping: 25 } }
+    visible: { x: 0, opacity: 1, transition: { type: 'spring', damping: 25 } }
   };
 
   const messageVariants = {
@@ -33,6 +51,24 @@ function Chat() {
     visible: { opacity: 1, y: 0 },
     exit: { opacity: 0, x: -100 }
   };
+
+  // Fetch all users to map usernames to their avatars
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await axios.get('/users');
+        const map = {};
+        response.data.forEach(user => {
+          map[user.name] = user.avatar_url;
+        });
+        setUsersMap(map);
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      }
+    };
+
+    fetchUsers();
+  }, []);
 
   useEffect(() => {
     fetchConversations();
@@ -43,10 +79,16 @@ function Chat() {
   useEffect(() => {
     if (conversationId) {
       fetchCurrentConversation();
-      const interval = setInterval(fetchCurrentConversation, 3000);
-      return () => clearInterval(interval);
+      // Set up polling for new messages
+      if (fetchInterval) clearInterval(fetchInterval);
+      const interval = setInterval(fetchNewMessages, 3000);
+      setFetchInterval(interval);
+      return () => {
+        clearInterval(interval);
+        setFetchInterval(null);
+      };
     } else {
-      setCurrentConversation(null); // Réinitialiser si pas de conversation sélectionnée
+      setCurrentConversation(null); // Reset if no conversation selected
     }
   }, [conversationId]);
 
@@ -55,40 +97,103 @@ function Chat() {
   }, [currentConversation?.messages]);
 
   const fetchConversations = async () => {
+    setLoadingConversations(true);
     try {
       const response = await axios.get('/conversations');
       setConversations(response.data);
     } catch (error) {
       console.error('Error fetching conversations:', error);
+    } finally {
+      setLoadingConversations(false);
     }
   };
 
   const fetchCurrentConversation = async () => {
+    setLoadingMessages(true);
     try {
       const response = await axios.get(`/conversations/${conversationId}`);
-      setCurrentConversation({
-        ...response.data,
-        messages: response.data.messages || []
-      });
+      setCurrentConversation(response.data);
+      const messages = response.data.messages;
+      if (messages && messages.length > 0) {
+        setLastMessageId(messages[messages.length - 1].id);
+      }
     } catch (error) {
       console.error('Error fetching conversation:', error);
+    } finally {
+      setLoadingMessages(false);
+    }
+  };
+
+  const fetchNewMessages = async () => {
+    try {
+      const response = await axios.get(`/conversations/${conversationId}/messages`);
+      const messages = response.data;
+      if (messages && messages.length > 0) {
+        // If lastMessageId is set, get new messages
+        if (lastMessageId) {
+          const lastMessageIndex = messages.findIndex(msg => msg.id === lastMessageId);
+          if (lastMessageIndex !== -1 && lastMessageIndex < messages.length - 1) {
+            const newMessages = messages.slice(lastMessageIndex + 1);
+            setCurrentConversation(prev => ({
+              ...prev,
+              messages: [...prev.messages, ...newMessages]
+            }));
+            setLastMessageId(messages[messages.length - 1].id);
+          }
+        } else {
+          // If no lastMessageId, set it
+          setCurrentConversation(prev => ({
+            ...prev,
+            messages
+          }));
+          setLastMessageId(messages[messages.length - 1].id);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching new messages:', error);
     }
   };
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
-    if (!message.trim()) return;
+    if (!message.trim() && !selectedFile) return;
+
+    let mediaUrl = null;
+    if (selectedFile) {
+      try {
+        const formData = new FormData();
+        formData.append('file', selectedFile);
+
+        const uploadResponse = await axios.post('/upload/avatar/', formData, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
+
+        mediaUrl = uploadResponse.data.avatar_url;
+        setSelectedFile(null);
+      } catch (error) {
+        console.error('Error uploading media:', error);
+        alert('Failed to upload media.');
+        return;
+      }
+    }
+
+    const payload = {
+      content: message.trim(),
+      media: mediaUrl
+    };
 
     try {
-      const newMessage = {
-        content: message,
-        sender: user.name, // Use user.name instead of user.id
-        timestamp: new Date().toISOString()
-      };
+      // Send message via POST request
+      const response = await axios.post(`/conversations/${conversationId}/messages`, payload);
+      const newMessage = response.data;
 
-      await axios.post(`/conversations/${conversationId}/messages`, newMessage);
+      // Update the conversation locally
+      setCurrentConversation(prev => ({
+        ...prev,
+        messages: [...prev.messages, newMessage]
+      }));
+      setLastMessageId(newMessage.id);
       setMessage('');
-      fetchCurrentConversation();
     } catch (error) {
       console.error('Error sending message:', error);
     }
@@ -99,40 +204,33 @@ function Chat() {
   };
 
   const filteredConversations = conversations.filter(conv => {
-    const conversationName = conv.name || '';
+    const conversationName = conv.name || conv.participants.join(', ');
     return conversationName.toLowerCase().includes(searchQuery.toLowerCase());
   });
 
   const formatTime = (timestamp) => {
-    return new Date(timestamp).toLocaleTimeString([], {
-      hour: '2-digit',
-      minute: '2-digit'
-    });
+    const date = new Date(timestamp);
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
 
-  // Fonction pour ouvrir le modal de création
+  // Typing Indicators (Optional)
+  const handleTyping = () => {
+    // Implement typing indicators if desired
+  };
+
+  // Handle File Selection
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setSelectedFile(file);
+  };
+
+  // Modal handlers
   const openCreateModal = () => {
     setIsCreateModalOpen(true);
   };
 
-  // Fonction pour fermer le modal de création
   const closeCreateModal = () => {
     setIsCreateModalOpen(false);
-  };
-
-  // Fonction pour créer une nouvelle conversation
-  const handleCreateConversation = async (conversationData) => {
-    try {
-      const response = await axios.post('/conversations', conversationData);
-      // Actualiser la liste des conversations
-      fetchConversations();
-      closeCreateModal();
-      // Naviguer vers la nouvelle conversation
-      navigate(`/chat/${response.data.id}`);
-    } catch (error) {
-      console.error('Error creating conversation:', error);
-      // Optionally set error state here
-    }
   };
 
   return (
@@ -157,7 +255,13 @@ function Chat() {
             whileTap={{ scale: 0.95 }}
             onClick={() => navigate('/profile')}
           >
-            <div className={styles.userAvatar}>{user.name[0].toUpperCase()}</div>
+            <div className={styles.userAvatar}>
+              {user.avatar_url ? (
+                <img src={user.avatar_url} alt="Avatar" className={styles.avatarImage} />
+              ) : (
+                user.name.charAt(0).toUpperCase()
+              )}
+            </div>
             <h3>{user.name}</h3>
           </motion.div>
         </div>
@@ -166,7 +270,7 @@ function Chat() {
           <IoSearch className={styles.searchIcon} />
           <input
             type="text"
-            placeholder="Rechercher une conversation..."
+            placeholder="Search conversations..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className={styles.searchInput}
@@ -175,44 +279,47 @@ function Chat() {
 
         <div className={styles.newConversationButton}>
           <button onClick={openCreateModal}>
-            <IoAdd /> Nouvelle Conversation
+            <IoAdd /> New Conversation
           </button>
         </div>
 
-        <div className={styles.conversationsList}>
-          <AnimatePresence>
-            {filteredConversations.map((conv) => (
-              <motion.div
-                key={conv.id}
-                className={`${styles.conversationItem} ${
-                  conv.id === conversationId ? styles.active : ''
-                }`}
-                variants={messageVariants}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
-                whileHover={{ x: 5 }}
-                onClick={() => {
-                  navigate(`/chat/${conv.id}`);
-                  setIsMobileMenuOpen(false);
-                }}
-              >
-                <div className={styles.conversationAvatar}>
-                  {(conv.name || '?')[0].toUpperCase()}
-                </div>
-                <div className={styles.conversationInfo}>
-                  <h4>{conv.name || 'Conversation sans nom'}</h4>
-                  <p>{conv.lastMessage?.content || 'Nouvelle conversation'}</p>
-                </div>
-                {conv.unreadCount > 0 && (
-                  <div className={styles.unreadBadge}>
-                    {conv.unreadCount}
+        {loadingConversations ? (
+          <div className={styles.loader}>Loading conversations...</div>
+        ) : (
+          <div className={styles.conversationsList}>
+            <AnimatePresence>
+              {filteredConversations.map((conv) => (
+                <motion.div
+                  key={conv.id}
+                  className={`${styles.conversationItem} ${conv.id === conversationId ? styles.active : ''}`}
+                  variants={messageVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  whileHover={{ x: 5 }}
+                  onClick={() => {
+                    navigate(`/chat/${conv.id}`);
+                    setIsMobileMenuOpen(false);
+                  }}
+                >
+                  <div className={styles.conversationAvatar}>
+                    {conv.name
+                      ? conv.name.charAt(0).toUpperCase()
+                      : conv.participants[0].charAt(0).toUpperCase()}
                   </div>
-                )}
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </div>
+                  <div className={styles.conversationInfo}>
+                    <h4>{conv.name || conv.participants.join(', ')}</h4>
+                    <p>
+                      {conv.messages && conv.messages.length > 0
+                        ? `${conv.messages[conv.messages.length - 1].content.substring(0, 20)}...`
+                        : 'No messages yet'}
+                    </p>
+                  </div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
+        )}
       </motion.aside>
 
       {/* Main Chat Area */}
@@ -227,7 +334,7 @@ function Chat() {
                 <IoMenu />
               </button>
               <div className={styles.chatInfo}>
-                <h2>{currentConversation.name}</h2>
+                <h2>{currentConversation.name || currentConversation.participants.join(', ')}</h2>
                 <span>{currentConversation.participants.length} participants</span>
               </div>
               <button className={styles.optionsButton}>
@@ -236,46 +343,97 @@ function Chat() {
             </header>
 
             <div className={styles.messagesContainer}>
-              <AnimatePresence>
-                {(currentConversation.messages || []).map((msg, index) => (
-                  <motion.div
-                    key={index}
-                    className={`${styles.message} ${
-                      msg.sender === user.name ? styles.sent : styles.received
-                    }`}
-                    variants={messageVariants}
-                    initial="hidden"
-                    animate="visible"
-                    exit="exit"
-                  >
-                    <p>{msg.content}</p>
-                    <span className={styles.timestamp}>
-                      {formatTime(msg.timestamp)}
-                    </span>
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-              <div ref={messagesEndRef} />
+              {loadingMessages ? (
+                <div className={styles.loader}>Loading messages...</div>
+              ) : (
+                <>
+                  <AnimatePresence>
+                    {currentConversation.messages.map((msg) => (
+                      <motion.div
+                        key={msg.id}
+                        className={`${styles.message} ${msg.sender === user.name ? styles.sent : styles.received}`}
+                        variants={messageVariants}
+                        initial="hidden"
+                        animate="visible"
+                        exit="exit"
+                      >
+                        <div className={styles.userAvatar}>
+                          {msg.sender === user.name ? (
+                            user.avatar_url ? (
+                              <img src={user.avatar_url} alt="Your Avatar" className={styles.avatarImage} />
+                            ) : (
+                              user.name.charAt(0).toUpperCase()
+                            )
+                          ) : (
+                            usersMap[msg.sender] ? (
+                              <img src={usersMap[msg.sender]} alt={`${msg.sender} Avatar`} className={styles.avatarImage} />
+                            ) : (
+                              msg.sender.charAt(0).toUpperCase()
+                            )
+                          )}
+                        </div>
+                        <div className={styles.messageContent}>
+                          {msg.media && (
+                            <div className={styles.mediaContent}>
+                              {/\.(jpeg|jpg|gif|png)$/.test(msg.media) ? (
+                                <img src={msg.media} alt="Media" className={styles.mediaImage} />
+                              ) : (
+                                <a href={msg.media} target="_blank" rel="noopener noreferrer" className={styles.mediaLink}>
+                                  View Document <IoDocument />
+                                </a>
+                              )}
+                            </div>
+                          )}
+                          <p>{msg.content}</p>
+                          {msg.reactions && Object.keys(msg.reactions).length > 0 && (
+                            <div className={styles.reactions}>
+                              {Object.entries(msg.reactions).map(([emoji, count]) => (
+                                <span key={emoji}>{emoji} {count}</span>
+                              ))}
+                            </div>
+                          )}
+                          <span className={styles.timestamp}>
+                            {formatTime(msg.timestamp)}
+                          </span>
+                          {/* Implement reactions if desired */}
+                          {/* <MessageReactions onAddReaction={(emoji) => handleAddReaction(msg.id, emoji)} /> */}
+                        </div>
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
+                  <div ref={messagesEndRef} />
+                </>
+              )}
             </div>
 
+            {/* Typing Status (Optional) */}
+            {typingStatus && <div className={styles.typingStatus}>{typingStatus}</div>}
+
             <form onSubmit={handleSendMessage} className={styles.messageForm}>
-              <motion.input
+              <input
                 type="text"
                 value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                placeholder="Écrivez votre message..."
-                whileFocus={{ scale: 1.01 }}
+                onChange={(e) => {
+                  setMessage(e.target.value);
+                  handleTyping();
+                }}
+                placeholder="Write your message..."
                 className={styles.messageInput}
               />
-              <motion.button
-                type="submit"
-                disabled={!message.trim()}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className={styles.sendButton}
-              >
+              <input
+                type="file"
+                accept="image/*,video/*,application/pdf"
+                onChange={handleFileChange}
+                className={styles.fileInput}
+                id="file-upload"
+                style={{ display: 'none' }}
+              />
+              <label htmlFor="file-upload" className={styles.uploadButton}>
+                <IoImage />
+              </label>
+              <button type="submit" disabled={!message.trim() && !selectedFile} className={styles.sendButton}>
                 <IoSend />
-              </motion.button>
+              </button>
             </form>
           </>
         ) : (
@@ -286,8 +444,8 @@ function Chat() {
             transition={{ duration: 0.5 }}
           >
             <div className={styles.welcomeContent}>
-              <h2>Bienvenue sur votre messagerie</h2>
-              <p>Sélectionnez une conversation pour commencer à discuter</p>
+              <h2>Welcome to your Messenger</h2>
+              <p>Select a conversation to start chatting</p>
             </div>
           </motion.div>
         )}
@@ -304,11 +462,14 @@ function Chat() {
         />
       )}
 
-      {/* Modal pour la création de conversation */}
+      {/* Modal for Creating Conversation */}
       {isCreateModalOpen && (
         <CreateConversationModal
           onClose={closeCreateModal}
-          onCreate={handleCreateConversation}
+          onCreate={() => {
+            fetchConversations();
+            setIsCreateModalOpen(false);
+          }}
         />
       )}
     </motion.div>

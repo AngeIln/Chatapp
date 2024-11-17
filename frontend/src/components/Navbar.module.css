@@ -1,4 +1,4 @@
-/* Navbar.module.css */
+/* frontend/src/components/Navbar/Navbar.module.css */
 
 .navbar {
   background: rgba(28, 28, 30, 0.8); /* Slightly lighter than the main container */
@@ -102,6 +102,13 @@
   transition: box-shadow 0.3s ease;
 }
 
+.avatarImage {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 .userAvatar:hover {
   box-shadow: 0 0 10px rgba(255, 65, 108, 0.6);
 }
@@ -119,6 +126,7 @@
   border: none;
   cursor: pointer;
   transition: background 0.3s ease, transform 0.3s ease;
+  margin-left: 0.5rem;
 }
 
 .logoutButton {
@@ -135,7 +143,6 @@
 .loginButton, .signupButton {
   background: rgba(255, 255, 255, 0.1);
   color: white;
-  margin-left: 0.5rem;
 }
 
 .loginButton:hover, .signupButton:hover {
@@ -143,3 +150,29 @@
   transform: translateY(-2px);
   box-shadow: 0 4px 6px rgba(255, 255, 255, 0.3);
 }
+/* frontend/src/components/Navbar/Navbar.module.css */
+
+.navbar {
+  background: var(--header-background); /* Use CSS variable */
+  /* Rest of the styles remain the same */
+}
+
+.loginButton, .signupButton {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-color);
+}
+
+.logoutButton {
+  background: var(--button-background);
+  color: white;
+}
+
+.logoutButton:hover {
+  background: var(--button-hover);
+}
+
+.navLink::after {
+  background: var(--button-background);
+}
+
+/* Similarly, update other components to use CSS variables */

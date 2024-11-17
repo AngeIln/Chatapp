@@ -1,0 +1,19 @@
+/* frontend/src/components/Chat/MessageReactions.module.css */
+.reactionsContainer {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+  
+  .reactionButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: transform 0.2s ease, color 0.2s ease;
+  }
+  
+  .reactionButton:hover {
+    transform: scale(1.2);
+    color: #FF4B2B;
+  }

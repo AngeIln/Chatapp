@@ -1,3 +1,4 @@
+// frontend/src/contexts/AuthContext.jsx
 import React, { createContext, useState, useEffect } from 'react';
 import axios from '../utils/api';
 
@@ -7,10 +8,11 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState({
     id: '',
     name: '',
-    bio: ''
+    bio: '',
+    avatar_url: ''
   });
 
-  // Charger l'utilisateur depuis le localStorage au démarrage
+  // Load user from localStorage on mount
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     const storedToken = localStorage.getItem('token');
@@ -19,7 +21,8 @@ export const AuthProvider = ({ children }) => {
       setUser({
         id: parsedUser.id || '',
         name: parsedUser.name || '',
-        bio: parsedUser.bio || ''
+        bio: parsedUser.bio || '',
+        avatar_url: parsedUser.avatar_url || ''
       });
       axios.defaults.headers.common['Authorization'] = `Bearer ${storedToken}`;
     }
@@ -34,14 +37,15 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('token', access_token);
     axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
 
-    // Récupérer les informations de l'utilisateur courant
+    // Fetch current user data
     const userResponse = await axios.get('/users/me');
     const fetchedUser = userResponse.data;
     localStorage.setItem('user', JSON.stringify(fetchedUser));
     setUser({
       id: fetchedUser.id || '',
       name: fetchedUser.name || '',
-      bio: fetchedUser.bio || ''
+      bio: fetchedUser.bio || '',
+      avatar_url: fetchedUser.avatar_url || ''
     });
   };
 
@@ -50,7 +54,7 @@ export const AuthProvider = ({ children }) => {
       name: username,
       password: password,
     });
-    // Après l'inscription, connecter l'utilisateur
+    // After signup, login the user
     await login(username, password);
   };
 
@@ -61,12 +65,13 @@ export const AuthProvider = ({ children }) => {
     setUser({
       id: '',
       name: '',
-      bio: ''
+      bio: '',
+      avatar_url: ''
     });
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, signup, logout }}>
+    <AuthContext.Provider value={{ user, login, signup, logout, setUser }}>
       {children}
     </AuthContext.Provider>
   );

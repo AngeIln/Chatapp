@@ -1,4 +1,5 @@
 // src/components/Auth/Signup.js
+
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
@@ -16,9 +17,10 @@ function Signup() {
     e.preventDefault();
     try {
       await signup(username, password);
-      navigate('/');
+      navigate('/conversations');
     } catch (err) {
-      setError("Erreur lors de l'inscription");
+      const errorMessage = err.response?.data?.detail || "Error during signup";
+      setError(errorMessage);
     }
   };
 
@@ -32,7 +34,7 @@ function Signup() {
       <div className={styles.overlay}></div>
       <div className={styles.formContainer}>
         <h1 className={styles.logo}>ChatApp</h1>
-        <h2 className={styles.title}>Créer un compte</h2>
+        <h2 className={styles.title}>Create an Account</h2>
 
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.inputField}>
@@ -41,7 +43,7 @@ function Signup() {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
-              placeholder="Nom d'utilisateur"
+              placeholder="Username"
             />
           </div>
 
@@ -51,19 +53,19 @@ function Signup() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              placeholder="Mot de passe"
+              placeholder="Password"
             />
           </div>
 
           {error && <div className={styles.error}>{error}</div>}
 
           <button type="submit" className={styles.button}>
-            S'inscrire
+            Sign Up
           </button>
         </form>
 
         <Link to="/login" className={styles.link}>
-          Déjà un compte ? Se connecter
+          Already have an account? Login
         </Link>
       </div>
     </motion.div>

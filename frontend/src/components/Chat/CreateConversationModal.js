@@ -1,10 +1,13 @@
-// src/components/Chat/CreateConversationModal.jsx
-import React, { useState, useEffect } from 'react';
+// frontend/src/components/Chat/CreateConversationModal.jsx
+
+import React, { useState, useEffect, useContext } from 'react';
 import { motion } from 'framer-motion';
 import styles from './CreateConversationModal.module.css';
 import axios from '../../utils/api';
+import { AuthContext } from '../../contexts/AuthContext';
 
 function CreateConversationModal({ onClose, onCreate }) {
+  const { user } = useContext(AuthContext);
   const [name, setName] = useState('');
   const [participants, setParticipants] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
@@ -18,41 +21,45 @@ function CreateConversationModal({ onClose, onCreate }) {
   const fetchAllUsers = async () => {
     try {
       const response = await axios.get('/users');
-      setAllUsers(response.data);
+      // Exclude current user from participants
+      const otherUsers = response.data.filter(u => u.name !== user.name);
+      setAllUsers(otherUsers);
     } catch (error) {
       console.error('Error fetching users:', error);
-      setError('Erreur lors du chargement des utilisateurs.');
+      setError('Error loading users.');
     }
   };
 
-  const handleAddParticipant = (userName) => {
-    if (!participants.includes(userName)) {
+  const handleToggleParticipant = (userName) => {
+    if (participants.includes(userName)) {
+      setParticipants(participants.filter(p => p !== userName));
+    } else {
       setParticipants([...participants, userName]);
     }
   };
 
-  const handleRemoveParticipant = (userName) => {
-    setParticipants(participants.filter(p => p !== userName));
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!name.trim() || participants.length === 0) {
-      setError('Veuillez entrer un nom de conversation et ajouter des participants.');
+    if (participants.length === 0) {
+      setError('Please add at least one participant.');
       return;
     }
-
-    const conversationData = {
-      name: name.trim(),
-      participants: participants // Already names
-    };
-
-    onCreate(conversationData);
+    try {
+      const conversationData = {
+        name: name.trim() || null,
+        participants
+      };
+      await axios.post('/conversations', conversationData);
+      onCreate();
+      onClose();
+    } catch (error) {
+      console.error('Error creating conversation:', error);
+      setError('Failed to create conversation.');
+    }
   };
 
-  const filteredUsers = allUsers.filter(user =>
-    user.name.toLowerCase().includes(searchUser.toLowerCase()) &&
-    user.name !== '' // Remplacez par `user.name !== currentUserName` si nécessaire
+  const filteredUsers = allUsers.filter(u =>
+    u.name.toLowerCase().includes(searchUser.toLowerCase())
   );
 
   return (
@@ -64,45 +71,49 @@ function CreateConversationModal({ onClose, onCreate }) {
         exit={{ opacity: 0, scale: 0.9 }}
         transition={{ duration: 0.3 }}
       >
-        <h2>Créer une nouvelle conversation</h2>
+        <h2>Create a New Conversation</h2>
         <form onSubmit={handleSubmit}>
           <div className={styles.inputGroup}>
-            <label>Nom de la conversation</label>
+            <label>Conversation Name (Optional)</label>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              required
+              placeholder="Enter conversation name"
             />
           </div>
 
           <div className={styles.inputGroup}>
-            <label>Ajouter des participants</label>
+            <label>Add Participants</label>
             <input
               type="text"
-              placeholder="Rechercher des utilisateurs..."
+              placeholder="Search users..."
               value={searchUser}
               onChange={(e) => setSearchUser(e.target.value)}
             />
             <div className={styles.usersList}>
               {filteredUsers.map(user => (
-                <div key={user.name} className={styles.userItem}>
-                  <span>{user.name}</span>
-                  <button type="button" onClick={() => handleAddParticipant(user.name)}>
-                    Ajouter
-                  </button>
+                <div key={user.id} className={styles.userItem}>
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={participants.includes(user.name)}
+                      onChange={() => handleToggleParticipant(user.name)}
+                    />
+                    {user.name}
+                  </label>
                 </div>
               ))}
             </div>
           </div>
 
           <div className={styles.participants}>
-            <h3>Participants :</h3>
+            <h3>Selected Participants:</h3>
             {participants.map(name => (
               <div key={name} className={styles.participantItem}>
                 <span>{name}</span>
-                <button type="button" onClick={() => handleRemoveParticipant(name)}>
-                  Retirer
+                <button type="button" onClick={() => handleToggleParticipant(name)}>
+                  Remove
                 </button>
               </div>
             ))}
@@ -112,10 +123,10 @@ function CreateConversationModal({ onClose, onCreate }) {
 
           <div className={styles.buttonGroup}>
             <button type="button" onClick={onClose} className={styles.cancelButton}>
-              Annuler
+              Cancel
             </button>
             <button type="submit" className={styles.createButton}>
-              Créer
+              Create
             </button>
           </div>
         </form>

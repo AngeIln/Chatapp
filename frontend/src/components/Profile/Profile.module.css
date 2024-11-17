@@ -411,6 +411,7 @@
     animation: shimmer 1.5s linear infinite;
   }
   
+  
   /* Optimisations de performance */
   @media (prefers-reduced-motion: reduce) {
     * {
@@ -420,3 +421,27 @@
       scroll-behavior: auto !important;
     }
   }
+  /* frontend/src/components/Profile/Profile.module.css */
+
+/* Existing styles... */
+
+.uploadLabel {
+  display: block;
+  margin-top: 0.5rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+  color: #FF416C;
+  transition: color 0.3s ease;
+  text-align: center;
+}
+
+.uploadLabel:hover {
+  color: #FF4B2B;
+}
+
+.avatarImage {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}

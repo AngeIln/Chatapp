@@ -1,0 +1,13 @@
+/* frontend/src/components/ThemeToggle.module.css */
+.toggleButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: var(--text-color);
+    transition: color 0.3s ease;
+  }
+  
+  .toggleButton:hover {
+    color: #FF4B2B;
+  }

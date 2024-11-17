@@ -1,7 +1,8 @@
 // src/components/Auth/Login.js
+
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import styles from './Login.module.css';
 
@@ -16,9 +17,10 @@ function Login() {
     e.preventDefault();
     try {
       await login(username, password);
-      navigate('/');
+      navigate('/conversations');
     } catch (err) {
-      setError("Nom d'utilisateur ou mot de passe incorrect");
+      const errorMessage = err.response?.data?.detail || "Incorrect username or password";
+      setError(errorMessage);
     }
   };
 
@@ -30,10 +32,10 @@ function Login() {
       transition={{ duration: 0.5 }}
     >
       <div className={styles.loginBox}>
-        <h2 className={styles.title}>Se connecter</h2>
+        <h2 className={styles.title}>Login</h2>
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.inputGroup}>
-            <label htmlFor="username">Nom d'utilisateur</label>
+            <label htmlFor="username">Username</label>
             <input
               id="username"
               type="text"
@@ -44,7 +46,7 @@ function Login() {
             />
           </div>
           <div className={styles.inputGroup}>
-            <label htmlFor="password">Mot de passe</label>
+            <label htmlFor="password">Password</label>
             <input
               id="password"
               type="password"
@@ -55,10 +57,13 @@ function Login() {
             />
           </div>
           <button type="submit" className={styles.submitButton}>
-            Se connecter
+            Login
           </button>
         </form>
         {error && <p className={styles.error}>{error}</p>}
+        <p className={styles.signupPrompt}>
+          Don't have an account? <Link to="/signup">Sign up</Link>
+        </p>
       </div>
     </motion.div>
   );

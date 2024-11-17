@@ -1,6 +1,8 @@
 fastapi
 uvicorn
+python-multipart
+python-dotenv
 pymongo
 bcrypt
-python-jose[cryptography]
-python-dotenv
+python-jose     # Keep this line
+python-jose-cryptodome

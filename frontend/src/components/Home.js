@@ -1,4 +1,5 @@
-import React, { useContext, useEffect, useState, useRef } from 'react';
+// frontend/src/components/Home.jsx
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import styles from './Home.module.css';
@@ -76,24 +77,24 @@ function Home() {
                 </div>
               </div>
               <h1 className={styles.welcomeText}>
-                Ravi de vous revoir, <span className={styles.userName}>{user.name}</span>
+                Welcome back, <span className={styles.userName}>{user.name}</span>
               </h1>
               <button className={styles.mainButton} onClick={handleStartChat}>
-                Accéder aux conversations
+                Go to Conversations
               </button>
             </div>
           ) : (
             <div className={styles.unauthenticatedContent}>
-              <h1 className={styles.heroTitle}>Connectez-vous pour commencer</h1>
+              <h1 className={styles.heroTitle}>Connect to Start Chatting</h1>
               <p className={styles.heroText}>
-                Rejoignez une communauté dynamique et échangez en temps réel
+                Join a dynamic community and communicate in real-time
               </p>
               <div className={styles.actionButtons}>
                 <button className={styles.mainButton} onClick={handleLogin}>
-                  Se connecter
+                  Login
                 </button>
                 <button className={styles.mainButton} onClick={handleSignUp}>
-                  Créer un compte
+                  Signup
                 </button>
               </div>
             </div>
@@ -107,13 +108,15 @@ function Home() {
         ref={el => sectionsRef.current[1] = el}
       >
         <div className={styles.contentWrapper}>
-          <h2 className={styles.sectionTitle}>Nos Fonctionnalités</h2>
+          <h2 className={styles.sectionTitle}>Our Features</h2>
           <div className={styles.featuresGrid}>
             {[
-              { icon: '🔒', title: 'Sécurisé', desc: 'Protection de bout en bout' },
-              { icon: '⚡', title: 'Rapide', desc: 'Communication en temps réel' },
-              { icon: '🌐', title: 'Global', desc: 'Accessible partout' },
-              { icon: '📱', title: 'Mobile', desc: 'Application responsive' },
+              { icon: '🔒', title: 'Secure', desc: 'End-to-end encryption' },
+              { icon: '⚡', title: 'Fast', desc: 'Real-time communication' },
+              { icon: '🌐', title: 'Global', desc: 'Accessible everywhere' },
+              { icon: '📱', title: 'Responsive', desc: 'Mobile-friendly interface' },
+              { icon: '🎨', title: 'Customizable', desc: 'Themes and avatars' },
+              { icon: '📂', title: 'Media Sharing', desc: 'Share images, videos, and documents' },
             ].map((feature, index) => (
               <div 
                 key={index}
@@ -135,12 +138,12 @@ function Home() {
         ref={el => sectionsRef.current[2] = el}
       >
         <div className={styles.contentWrapper}>
-          <h2 className={styles.sectionTitle}>Nos Chiffres</h2>
+          <h2 className={styles.sectionTitle}>Our Stats</h2>
           <div className={styles.statsGrid}>
             {[
-              { number: <span style={{ fontFamily: 'serif' }}>&#x221A;100%</span>, label: 'de satisfaction client' },
-              { number: <span style={{ fontFamily: 'serif' }}>10MD<sup>0</sup></span>, label: 'Messages' },
-              { number: '99.9%', label: 'indisponibilité' },
+              { number: '10k+', label: 'Active Users' },
+              { number: '500k+', label: 'Messages Sent' },
+              { number: '99.9%', label: 'Uptime' },
             ].map((stat, index) => (
               <div 
                 key={index}
@@ -161,13 +164,13 @@ function Home() {
         ref={el => sectionsRef.current[3] = el}
       >
         <div className={styles.contentWrapper}>
-          <h2 className={styles.sectionTitle}>Contactez-nous</h2>
+          <h2 className={styles.sectionTitle}>Get in Touch</h2>
           <div className={styles.contactContent}>
             <p className={styles.contactText}>
-              Prêt a nous rejoindre !
+              Ready to join us?
             </p>
             <button className={styles.mainButton}>
-              Commencer
+              Start Chatting
             </button>
           </div>
         </div>
