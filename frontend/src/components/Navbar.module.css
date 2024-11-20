@@ -1,178 +1,40 @@
-/* frontend/src/components/Navbar/Navbar.module.css */
-
 .navbar {
-  background: rgba(28, 28, 30, 0.8); /* Slightly lighter than the main container */
-  backdrop-filter: blur(15px);
-  padding: 1rem 2rem;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
+  background-color: #1e1e1e;
+  padding: 10px 20px;
+  border-bottom: 1px solid #333333;
+}
+
+.navList {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  transition: all 0.3s ease;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
-.navbarContainer {
-  max-width: 1200px;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin: 0 auto;
-}
-
-.navbarLogo {
-  font-size: 1.8rem;
-  font-weight: 700;
-  text-decoration: none;
-  background: linear-gradient(135deg, #FF416C, #FF4B2B);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  transition: opacity 0.3s ease;
-}
-
-.navbarLogo:hover {
-  opacity: 0.8;
-}
-
-.navbarContent {
-  display: flex;
-  align-items: center;
-}
-
-.authenticatedNav {
-  display: flex;
-  align-items: center;
-}
-
-.navLinks {
-  display: flex;
-  gap: 1.5rem;
-  margin-right: 1.5rem;
+.navItem {
+  margin-right: 20px;
 }
 
 .navLink {
-  color: #FFFFFF;
+  color: #ffffff;
   text-decoration: none;
-  font-weight: 500;
-  position: relative;
+  font-size: 1rem;
   transition: color 0.3s ease;
 }
 
-.navLink::after {
-  content: '';
-  position: absolute;
-  width: 0%;
-  height: 2px;
-  left: 0;
-  bottom: -4px;
-  background: linear-gradient(90deg, #FF416C, #FF4B2B);
-  transition: width 0.3s ease;
+.navLink:hover {
+  color: #4c4c4c;
 }
 
-.navLink:hover::after {
-  width: 100%;
-}
-
-.userSection {
-  display: flex;
-  align-items: center;
-}
-
-.userInfo {
-  display: flex;
-  align-items: center;
-  margin-right: 1rem;
-}
-
-.userAvatar {
-  width: 40px;
-  height: 40px;
-  background: linear-gradient(135deg, #FF416C, #FF4B2B);
-  color: white;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1rem;
-  margin-right: 0.5rem;
-  transition: box-shadow 0.3s ease;
-}
-
-.avatarImage {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.userAvatar:hover {
-  box-shadow: 0 0 10px rgba(255, 65, 108, 0.6);
-}
-
-.userName {
-  color: white;
-  font-size: 1rem;
-  font-weight: 500;
-}
-
-.logoutButton, .loginButton, .signupButton {
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  font-weight: 600;
+.logoutButton {
+  background: none;
   border: none;
+  color: #ffffff;
+  font-size: 1rem;
   cursor: pointer;
-  transition: background 0.3s ease, transform 0.3s ease;
-  margin-left: 0.5rem;
-}
-
-.logoutButton {
-  background: linear-gradient(135deg, #FF416C, #FF4B2B);
-  color: white;
+  transition: color 0.3s ease;
 }
 
 .logoutButton:hover {
-  background: linear-gradient(135deg, #FF4B2B, #FF416C);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 6px rgba(255, 65, 108, 0.3);
+  color: #4c4c4c;
 }
-
-.loginButton, .signupButton {
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-}
-
-.loginButton:hover, .signupButton:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 6px rgba(255, 255, 255, 0.3);
-}
-/* frontend/src/components/Navbar/Navbar.module.css */
-
-.navbar {
-  background: var(--header-background); /* Use CSS variable */
-  /* Rest of the styles remain the same */
-}
-
-.loginButton, .signupButton {
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--text-color);
-}
-
-.logoutButton {
-  background: var(--button-background);
-  color: white;
-}
-
-.logoutButton:hover {
-  background: var(--button-hover);
-}
-
-.navLink::after {
-  background: var(--button-background);
-}
-
-/* Similarly, update other components to use CSS variables */

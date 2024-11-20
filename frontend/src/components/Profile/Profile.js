@@ -1,98 +1,101 @@
-// frontend/src/components/Profile/Profile.jsx
-
-import React, { useContext, useEffect, useState } from 'react';
-import axios from '../../utils/api';
+import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
+import axios from '../../utils/api';
+import { useNavigate } from 'react-router-dom';
 import styles from './Profile.module.css';
 
-function Profile() {
+const Profile = () => {
   const { user, setUser } = useContext(AuthContext);
   const [bio, setBio] = useState('');
   const [editingBio, setEditingBio] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [previewImage, setPreviewImage] = useState(null);
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     setBio(user.bio || '');
   }, [user.bio]);
 
+  const handleInputChange = (e) => {
+    setBio(e.target.value);
+  };
+
   const handleSaveBio = async () => {
     try {
       const response = await axios.put('/users/me/bio', { bio });
       setEditingBio(false);
-      // Update user context and localStorage
-      const updatedUser = { ...user, bio: response.data.bio };
-      setUser(updatedUser);
-      localStorage.setItem('user', JSON.stringify(updatedUser));
-    } catch (error) {
-      console.error('Error saving bio:', error);
-      setError('Failed to save bio.');
+      setUser(prevUser => ({
+        ...prevUser,
+        bio: response.data.bio,
+      }));
+      localStorage.setItem('user', JSON.stringify(response.data));
+    } catch (err) {
+      setError('Erreur lors de la sauvegarde de la bio.');
     }
   };
 
-  const handleAvatarUpload = async (e) => {
+  const handleFileChange = (e) => {
     const file = e.target.files[0];
+    setSelectedFile(file);
+    setPreviewImage(URL.createObjectURL(file));
+  };
+
+  const handleAvatarUpload = async () => {
+    const file = selectedFile;
     if (!file) return;
 
     try {
-      // Basic client-side validation
-      if (!['image/jpeg', 'image/png', 'image/gif'].includes(file.type)) {
-        setError('Unsupported file type. Please upload a JPEG, PNG, or GIF image.');
-        return;
-      }
-
       const formData = new FormData();
       formData.append('file', file);
 
-      const response = await axios.post('/upload/avatar/', formData, {
+      const response = await axios.post('/upload/avatar', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
       const { avatar_url } = response.data;
+      setUser(prevUser => ({
+        ...prevUser,
+        avatar_url,
+      }));
 
-      // Update user context and localStorage
-      const updatedUser = { ...user, avatar_url };
-      setUser(updatedUser);
-      localStorage.setItem('user', JSON.stringify(updatedUser));
-
+      setSelectedFile(null);
+      setPreviewImage(null);
       setError('');
     } catch (error) {
-      console.error('Error uploading avatar:', error);
-      setError('Failed to upload avatar.');
+      setError('Erreur lors du téléchargement de l\'avatar.');
     }
+  };
+
+  const removeSelectedFile = () => {
+    setSelectedFile(null);
+    setPreviewImage(null);
   };
 
   return (
     <div className={styles.container}>
-      <div className={styles.background}>
-        <div className={styles.gradient1}></div>
-        <div className={styles.gradient2}></div>
-        <div className={styles.gradient3}></div>
-      </div>
-      
       <div className={styles.glassOverlay}>
         <div className={styles.profileHeader}>
           <div className={styles.avatarContainer}>
-            <div className={styles.avatarRing}></div>
             <div className={styles.avatar}>
               {user.avatar_url ? (
                 <img src={user.avatar_url} alt="Avatar" className={styles.avatarImage} />
               ) : (
-                user.name.charAt(0).toUpperCase()
+                <span>{user.name.charAt(0).toUpperCase()}</span>
               )}
             </div>
             <input
               type="file"
               accept="image/*"
-              onChange={handleAvatarUpload}
+              onChange={handleFileChange}
               id="avatar-upload"
               style={{ display: 'none' }}
             />
-            <label htmlFor="avatar-upload" className={styles.uploadLabel}>
+            <label htmlFor="avatar-upload" className={styles.uploadLabel} onClick={handleAvatarUpload}>
               Change Avatar
             </label>
           </div>
           <h1 className={styles.username}>{user.name}</h1>
-          <div className={styles.statusBadge}>Online</div>
         </div>
 
         <div className={styles.bioSection}>
@@ -100,32 +103,40 @@ function Profile() {
             <div className={styles.editContainer}>
               <textarea
                 value={bio || ''}
-                onChange={(e) => setBio(e.target.value)}
+                onChange={handleInputChange}
                 className={styles.bioInput}
-                placeholder="Write something about yourself..."
+                placeholder="Écrivez quelque chose à propos de vous..."
               />
               <div className={styles.buttonGroup}>
                 <button onClick={() => setEditingBio(false)} className={styles.cancelButton}>
-                  Cancel
+                  Annuler
                 </button>
                 <button onClick={handleSaveBio} className={styles.saveButton}>
-                  Save
+                  Enregistrer
                 </button>
               </div>
             </div>
           ) : (
             <div className={styles.bioContainer}>
-              <p className={styles.bioText}>{bio || "No bio set."}</p>
+              <p className={styles.bioText}>{bio || "Aucune bio définie."}</p>
               <button onClick={() => setEditingBio(true)} className={styles.editButton}>
-                Edit Profile
+                Modifier le profil
               </button>
             </div>
           )}
           {error && <div className={styles.error}>{error}</div>}
+          {selectedFile && (
+            <div>
+              <img src={previewImage} alt="Preview" className={styles.imagePreview} />
+              <button onClick={removeSelectedFile} className={styles.closeButton}>
+                Supprimer
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default Profile;

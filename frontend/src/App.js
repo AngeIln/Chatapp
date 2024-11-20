@@ -1,5 +1,3 @@
-// frontend/src/App.jsx
-
 import React, { useContext } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthContext } from './contexts/AuthContext';
@@ -9,7 +7,8 @@ import Home from './components/Home';
 import Chat from './components/Chat/Chat';
 import Profile from './components/Profile/Profile';
 import Navbar from './components/Navbar';
-import UserProfile from './components/UserProfile'; // Import du composant UserProfile
+import UserProfile from './components/UserProfile';
+import Settings from './components/Settings';
 
 function App() {
   const { user } = useContext(AuthContext);
@@ -24,7 +23,8 @@ function App() {
         <Route path="/profile" element={user.name ? <Profile /> : <Navigate to="/login" />} />
         <Route path="/conversations" element={user.name ? <Chat /> : <Navigate to="/login" />} />
         <Route path="/chat/:conversationId" element={user.name ? <Chat /> : <Navigate to="/login" />} />
-        <Route path="/users/:username" element={user.name ? <UserProfile /> : <Navigate to="/login" />} /> {/* Nouvelle route */}
+        <Route path="/users/:username" element={user.name ? <UserProfile /> : <Navigate to="/login" />} />
+        <Route path="/settings" element={user.name ? <Settings /> : <Navigate to="/login" />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>

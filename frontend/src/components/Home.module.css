@@ -1,4 +1,3 @@
-/* Home.module.css */
 .mainContainer {
   position: relative;
   min-height: 100vh;
@@ -19,7 +18,7 @@
 
 .progressFill {
   height: 100%;
-  background: linear-gradient(90deg, #FF416C, #FF4B2B);
+  background: var(--primary-gradient);
   transition: width 0.1s ease-out;
 }
 
@@ -110,7 +109,7 @@
 }
 
 .featureCard {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--input-background);
   backdrop-filter: blur(10px);
   border-radius: 20px;
   padding: 30px;
@@ -145,7 +144,7 @@
 }
 
 .statCard {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--input-background);
   backdrop-filter: blur(10px);
   border-radius: 20px;
   padding: 30px;
@@ -163,7 +162,7 @@
 .statNumber {
   font-size: 3rem;
   font-weight: bold;
-  background: linear-gradient(45deg, #FF416C, #FF4B2B);
+  background: var(--primary-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   display: block;
@@ -220,7 +219,7 @@
   font-weight: 600;
   border: none;
   border-radius: 25px;
-  background: linear-gradient(45deg, #FF416C, #FF4B2B);
+  background: var(--button-background);
   color: white;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -251,19 +250,19 @@
   .heroTitle {
     font-size: 2.5rem;
   }
-  
+
   .heroText {
     font-size: 1.2rem;
   }
-  
+
   .section {
     padding: 60px 20px;
   }
-  
+
   .statNumber {
     font-size: 2.5rem;
   }
-  
+
   .actionButtons {
     flex-direction: column;
   }
