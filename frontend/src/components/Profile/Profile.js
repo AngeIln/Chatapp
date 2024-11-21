@@ -1,3 +1,5 @@
+// frontend/src/components/Profile.js
+
 import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
 import axios from '../../utils/api';

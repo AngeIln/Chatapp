@@ -1,61 +1,13 @@
 .container {
   min-height: 100vh;
   width: 100%;
-  background: #0a0a0a;
+  background: var(--background-color);
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 2rem;
   position: relative;
   overflow: hidden;
-}
-
-.background {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
-  position: relative;
-  overflow: hidden;
-}
-
-.gradient1, .gradient2, .gradient3 {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-}
-
-.gradient1 {
-  width: 50%;
-  height: 50%;
-  background: rgba(255, 65, 108, 0.15);
-  top: -10%;
-  left: -10%;
-  animation: moveGradient1 15s infinite alternate;
-}
-
-.gradient2 {
-  width: 60%;
-  height: 60%;
-  background: rgba(59, 130, 246, 0.15);
-  top: 30%;
-  right: -20%;
-  animation: moveGradient2 20s infinite alternate;
-}
-
-.gradient3 {
-  width: 40%;
-  height: 40%;
-  background: rgba(46, 213, 115, 0.15);
-  bottom: -20%;
-  left: 20%;
-  animation: moveGradient3 17s infinite alternate;
 }
 
 .glassOverlay {
@@ -88,12 +40,12 @@
   margin: 0 auto 1rem;
   border-radius: 50%;
   overflow: hidden;
-  background: linear-gradient(135deg, #FF416C, #FF4B2B);
+  background: var(--primary-gradient);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 3rem;
-  color: #ffffff;
+  color: var(--text-color);
   animation: spin 10s linear infinite;
 }
 
@@ -104,26 +56,18 @@
   object-fit: cover;
 }
 
-.avatarRing {
-  position: absolute;
-  inset: -3px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #FF416C, #FF4B2B);
-  animation: spin 10s linear infinite;
-}
-
 .uploadLabel {
   display: block;
   margin-top: 0.5rem;
   cursor: pointer;
   font-size: 0.875rem;
-  color: #FF416C;
+  color: var(--primary-color);
   transition: color 0.3s ease;
   text-align: center;
 }
 
 .uploadLabel:hover {
-  color: #FF4B2B;
+  color: var(--secondary-color);
 }
 
 .bioSection {
@@ -154,7 +98,7 @@
 
 .bioInput:focus {
   outline: none;
-  border-color: #FF416C;
+  border-color: var(--primary-color);
   box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
 }
 
@@ -167,10 +111,10 @@
 
 .editButton, .saveButton, .cancelButton {
   padding: 0.8rem 2rem;
-  background: linear-gradient(45deg, #FF416C, #FF4B2B);
+  background: var(--button-background);
   border: none;
   border-radius: 10px;
-  color: #ffffff;
+  color: var(--text-color);
   font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
@@ -178,16 +122,16 @@
 }
 
 .editButton:hover {
-  background: linear-gradient(45deg, #FF4B2B, #FF416C);
+  background: var(--button-hover);
 }
 
 .saveButton:hover {
-  background: linear-gradient(45deg, #FF416C, #FF4B2B);
+  background: var(--button-hover);
 }
 
 .cancelButton {
   background: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
+  color: var(--text-color);
   border: 1px solid rgba(255, 255, 255, 0.1);
   font-size: 1rem;
   font-weight: 500;
@@ -200,9 +144,9 @@
 }
 
 .error {
-  color: #ff4747;
+  color: var(--primary-color);
   padding: 10px;
-  border: 1px solid #ff4747;
+  border: 1px solid var(--primary-color);
   border-radius: 5px;
   background: rgba(255, 255, 255, 0.1);
   margin-top: 10px;
@@ -229,7 +173,7 @@
 /* Selection Text */
 ::selection {
   background: rgba(255, 255, 255, 0.3);
-  color: white;
+  color: var(--text-color);
 }
 
 /* Additional Animations */
@@ -244,7 +188,7 @@
 /* Focus Styles */
 .bioInput:focus {
   outline: none;
-  border-color: #FF416C;
+  border-color: var(--primary-color);
   box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
 }
 
@@ -303,11 +247,6 @@ button:focus {
     font-size: 2.5rem;
   }
 
-  .statusBadge {
-    padding: 0.4rem 0.8rem;
-    font-size: 0.8rem;
-  }
-
   .bioInput {
     min-height: 180px;
     font-size: 1.2rem;
@@ -329,11 +268,6 @@ button:focus {
 
   .username {
     font-size: 1.5rem;
-  }
-
-  .statusBadge {
-    padding: 0.2rem 0.4rem;
-    font-size: 0.6rem;
   }
 
   .bioInput {

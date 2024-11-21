@@ -4,8 +4,8 @@ import os
 import json
 from datetime import datetime, timedelta
 from typing import Dict, Set, List, Optional
-
-from fastapi import FastAPI, Depends, HTTPException, status, WebSocket, WebSocketDisconnect, UploadFile, File
+import random
+from fastapi import FastAPI, Depends, HTTPException, status, WebSocket, WebSocketDisconnect, UploadFile, File, Body
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
@@ -14,12 +14,21 @@ from bson.objectid import ObjectId
 import bcrypt
 import jwt
 from jwt.exceptions import PyJWTError as JWTError
-
 from models import *
 from authentication import get_current_user, authenticate_user, create_access_token, get_user
-from config import MONGODB_URI, SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES
+from config import MONGODB_URI, SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES, CLOUD_NAME, API_KEY_CLOUD, API_SECRET_CLOUD
+import cloudinary
+import cloudinary.api
+import cloudinary.uploader
+from uuid import uuid4
 
-# Initialisation de l'application FastAPI
+cloudinary.config(
+    cloud_name=CLOUD_NAME,
+    api_key=API_KEY_CLOUD,
+    api_secret=API_SECRET_CLOUD,
+    secure=True,
+)
+
 app = FastAPI()
 
 # Configuration CORS
@@ -36,33 +45,21 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Dossier pour les fichiers téléchargés
-UPLOAD_DIRECTORY = "uploads"
-
-if not os.path.exists(UPLOAD_DIRECTORY):
-    os.makedirs(UPLOAD_DIRECTORY)
-
-app.mount("/uploads", StaticFiles(directory=UPLOAD_DIRECTORY), name="uploads")
-
 # Connexion à la base de données MongoDB
 client = MongoClient(MONGODB_URI)
 db = client["FIRSTSERv"]
 users_collection = db["users"]
 conversations_collection = db["conversations"]
 
-# Création des index si nécessaire
 users_collection.create_index([("name", ASCENDING)], unique=True)
 conversations_collection.create_index([("participants", ASCENDING)])
 conversations_collection.create_index([("messages.content", TEXT)])
 
-# Dictionnaire pour stocker les connexions WebSocket par conversation
 connections: Dict[str, Set[WebSocket]] = {}
 
-# Modèle pour la mise à jour de la bio
 class BioUpdate(BaseModel):
     bio: str
 
-# Endpoint pour l'inscription
 @app.post("/signup", response_model=User)
 def signup(user: UserCreate):
     # Vérifier si l'utilisateur existe déjà
@@ -72,19 +69,24 @@ def signup(user: UserCreate):
     # Hasher le mot de passe
     hashed_password = bcrypt.hashpw(user.password.encode('utf-8'), bcrypt.gensalt())
 
-    # Créer l'utilisateur
+    random_pp = [
+        "https://res.cloudinary.com/dcigc9jyw/raw/upload/v1732209655/avatar/e8kenkyye3vxpleuntso.jpg",
+        "https://res.cloudinary.com/dcigc9jyw/raw/upload/v1732209837/avatar/ehgaeiwnr9eslhinl8x9.jpg",
+        "https://res.cloudinary.com/dcigc9jyw/raw/upload/v1732210048/avatar/vfx6y1r9dngczafln2st.jpg"
+    ]
+    random_number = random.randint(0, len(random_pp) - 1)
     user_doc = {
         "name": user.name,
         "password": hashed_password.decode('utf-8'),
-        "bio": user.bio or "",  # Initialiser la bio
-        "avatar_url": None
+        "bio": user.bio or "",
+        "avatar_url": random_pp[random_number]
     }
     result = users_collection.insert_one(user_doc)
     return User(
         id=str(result.inserted_id),
         name=user.name,
         bio=user.bio or "",
-        avatar_url=None
+        avatar_url=random_pp[random_number]  # Correction ici pour inclure l'avatar_url
     )
 
 # Endpoint pour la connexion
@@ -215,7 +217,6 @@ def get_conversation(conversation_id: str, current_user: UserInDB = Depends(get_
         messages=messages
     )
 
-# Endpoint pour envoyer un message à une conversation via REST
 @app.post("/conversations/{conversation_id}/messages", response_model=Message)
 def send_message(conversation_id: str, message_create: MessageCreate, current_user: UserInDB = Depends(get_current_user)):
     try:
@@ -226,9 +227,10 @@ def send_message(conversation_id: str, message_create: MessageCreate, current_us
         raise HTTPException(status_code=404, detail="Conversation non trouvée")
     if current_user.name not in conversation["participants"]:
         raise HTTPException(status_code=403, detail="Accès refusé")
-    
-    # Créer le message
+
+    # Créer le message avec un ID unique
     message = Message(
+        id=str(uuid4()),  # Générer un ID unique pour le message
         sender=current_user.name,
         content=message_create.content or "",
         timestamp=datetime.utcnow(),
@@ -246,7 +248,36 @@ def send_message(conversation_id: str, message_create: MessageCreate, current_us
 
     return message
 
-# Endpoint pour obtenir les messages d'une conversation
+@app.post("/conversations/{conversation_id}/messages/{message_id}/reactions", response_model=Message)
+def add_reaction(conversation_id: str, message_id: str, reaction: str = Body(...), current_user: UserInDB = Depends(get_current_user)):
+    try:
+        conversation = conversations_collection.find_one({"_id": ObjectId(conversation_id)})
+    except Exception:
+        raise HTTPException(status_code=400, detail="ID de conversation invalide")
+    if not conversation:
+        raise HTTPException(status_code=404, detail="Conversation non trouvée")
+    if current_user.name not in conversation["participants"]:
+        raise HTTPException(status_code=403, detail="Accès refusé")
+
+    # Trouver le message avec l'ID spécifié
+    message = next((msg for msg in conversation["messages"] if str(msg["id"]) == message_id), None)
+    if not message:
+        raise HTTPException(status_code=404, detail="Message non trouvé")
+
+    # Ajouter la réaction
+    if reaction in message["reactions"]:
+        message["reactions"][reaction] += 1
+    else:
+        message["reactions"][reaction] = 1
+
+    # Mettre à jour la conversation dans la base de données
+    conversations_collection.update_one(
+        {"_id": ObjectId(conversation_id)},
+        {"$set": {"messages": conversation["messages"]}}
+    )
+
+    return message
+
 @app.get("/conversations/{conversation_id}/messages", response_model=List[Message])
 def get_messages(conversation_id: str, current_user: UserInDB = Depends(get_current_user)):
     try:
@@ -272,10 +303,8 @@ def delete_conversation(conversation_id: str, current_user: UserInDB = Depends(g
     conversations_collection.delete_one({"_id": ObjectId(conversation_id)})
     return {"detail": "Conversation supprimée"}
 
-# Endpoint pour télécharger un avatar ou autre média
 @app.post("/upload/avatar/", response_model=dict)
 async def upload_avatar(file: UploadFile = File(...), current_user: UserInDB = Depends(get_current_user)):
-    # Vérifier le type de fichier
     if not file.content_type.startswith('image/'):
         raise HTTPException(status_code=400, detail="Seuls les fichiers image sont autorisés.")
 
@@ -286,26 +315,12 @@ async def upload_avatar(file: UploadFile = File(...), current_user: UserInDB = D
         raise HTTPException(status_code=400, detail="La taille du fichier dépasse la limite de 5MB.")
     await file.seek(0)  # Réinitialiser le pointeur de fichier après la lecture
 
-    # Générer un nom de fichier unique
-    timestamp = datetime.utcnow().strftime("%Y%m%d%H%M%S")
-    filename = f"{current_user.name}_{timestamp}_{file.filename}"
-    file_path = os.path.join(UPLOAD_DIRECTORY, filename)
-
     # Enregistrer le fichier
-    with open(file_path, "wb") as buffer:
-        buffer.write(await file.read())
+    result = cloudinary.uploader.upload(file.file, folder="avatar", resource_type="raw")
+    file_url = result["secure_url"]
 
-    # Générer l'URL du fichier
-    # Remplacez 'http://localhost:8000' par votre domaine ou adresse IP et port corrects
-    file_url = f"http://localhost:8000/uploads/{filename}"
-
-    # Mettre à jour l'avatar_url de l'utilisateur
     users_collection.update_one(
         {"name": current_user.name},
         {"$set": {"avatar_url": file_url}}
     )
     return {"avatar_url": file_url}
-
-# Autres endpoints et WebSocket (non modifiés dans ce contexte)... 
-
-# N'oubliez pas d'inclure également les autres fichiers nécessaires (authentication.py, config.py, database.py, models.py)

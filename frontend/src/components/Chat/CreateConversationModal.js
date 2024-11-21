@@ -47,7 +47,7 @@ function CreateConversationModal({ onClose, onCreate }) {
     try {
       const conversationData = {
         name: name.trim() || null,
-        participants
+        participants,
       };
       await axios.post('/conversations', conversationData);
       onCreate();

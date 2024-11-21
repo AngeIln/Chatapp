@@ -1,3 +1,5 @@
+// frontend/src/components/Chat/Chat.js
+
 import React, { useEffect, useState, useContext, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from '../../utils/api';
@@ -134,6 +136,10 @@ function Chat() {
   };
 
   const handleAddReaction = async (messageId, reaction) => {
+    if (!messageId) {
+      console.error('ID du message non défini');
+      return;
+    }
     try {
       await axios.post(`/conversations/${conversationId}/messages/${messageId}/reactions`, { reaction });
       setCurrentConversation(prev => {
@@ -186,6 +192,10 @@ function Chat() {
     setPreviewImage(null);
   };
 
+  const handleProfileClick = (username) => {
+    navigate(`/users/${username}`);
+  };
+
   return (
     <div className={styles.container}>
       {/* Sidebar */}
@@ -195,7 +205,7 @@ function Chat() {
             className={styles.userProfile}
             onClick={() => navigate('/profile')}
           >
-            <div className={styles.userAvatar}>
+            <div className={styles.userAvatar} onClick={() => handleProfileClick(user.name)}>
               {user.avatar_url ? (
                 <img src={user.avatar_url} alt="Avatar" className={styles.avatarImage} />
               ) : (
@@ -231,7 +241,7 @@ function Chat() {
                 className={`${styles.conversationItem} ${conv.id === conversationId ? styles.active : ''}`}
                 onClick={() => navigate(`/chat/${conv.id}`)}
               >
-                <div className={styles.conversationAvatar}>
+                <div className={styles.conversationAvatar} onClick={() => handleProfileClick(conv.participants[0])}>
                   {usersMap[conv.participants[0]]?.avatar_url ? (
                     <img src={usersMap[conv.participants[0]].avatar_url} alt={`${usersMap[conv.participants[0]].name} Avatar`} />
                   ) : (
@@ -275,7 +285,7 @@ function Chat() {
                     key={msg.id}
                     className={`${styles.messageGroup} ${msg.sender === user.name ? styles.sent : styles.received}`}
                   >
-                    <div className={styles.messagePicture}>
+                    <div className={styles.messagePicture} onClick={() => handleProfileClick(msg.sender)}>
                       {msg.sender === user.name ? (
                         user.avatar_url ? (
                           <img src={user.avatar_url} alt="Your Avatar" className={styles.avatarImage} />
@@ -309,7 +319,11 @@ function Chat() {
                             </span>
                           ))}
                         </div>
-                        <MessageReactions onAddReaction={(reaction) => handleAddReaction(msg.id, reaction)} />
+                        <MessageReactions
+                          messageId={msg.id}
+                          conversationId={conversationId}
+                          onAddReaction={(reaction) => handleAddReaction(msg.id, reaction)}
+                        />
                       </div>
                     </div>
                   </div>

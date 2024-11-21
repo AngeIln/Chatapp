@@ -35,7 +35,6 @@ function Signup() {
       <div className={styles.formContainer}>
         <h1 className={styles.logo}>ChatApp</h1>
         <h2 className={styles.title}>Create an Account</h2>
-
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.inputField}>
             <input
@@ -46,7 +45,6 @@ function Signup() {
               placeholder="Username"
             />
           </div>
-
           <div className={styles.inputField}>
             <input
               type="password"
@@ -56,14 +54,11 @@ function Signup() {
               placeholder="Password"
             />
           </div>
-
           {error && <div className={styles.error}>{error}</div>}
-
           <button type="submit" className={styles.button}>
             Sign Up
           </button>
         </form>
-
         <Link to="/login" className={styles.link}>
           Already have an account? Login
         </Link>

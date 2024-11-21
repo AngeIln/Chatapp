@@ -6,3 +6,4 @@ pymongo
 bcrypt
 python-jose     # Keep this line
 python-jose-cryptodome
+cloudinary
