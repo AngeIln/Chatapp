@@ -45,10 +45,10 @@ const Profile = () => {
     const file = selectedFile;
     if (!file) return;
 
-    try {
-      const formData = new FormData();
-      formData.append('file', file);
+    const formData = new FormData();
+    formData.append('file', file);
 
+    try {
       const response = await axios.post('/upload/avatar', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });

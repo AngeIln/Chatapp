@@ -1,4 +1,4 @@
-// frontend/src/components/Home.jsx
+// frontend/src/components/Home.js
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';

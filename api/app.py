@@ -1,5 +1,3 @@
-# api/app.py
-
 import os
 import json
 from datetime import datetime, timedelta
@@ -21,11 +19,17 @@ import cloudinary
 import cloudinary.api
 import cloudinary.uploader
 from uuid import uuid4
+from dotenv import load_dotenv
+import logging
 
+# Charger les variables d'environnement à partir du fichier .env
+load_dotenv()
+
+# Configuration de Cloudinary
 cloudinary.config(
-    cloud_name=CLOUD_NAME,
-    api_key=API_KEY_CLOUD,
-    api_secret=API_SECRET_CLOUD,
+    cloud_name=os.getenv('CLOUD_NAME'),
+    api_key=os.getenv('API_KEY_CLOUD'),
+    api_secret=os.getenv('API_SECRET_CLOUD'),
     secure=True,
 )
 
@@ -54,7 +58,6 @@ conversations_collection = db["conversations"]
 users_collection.create_index([("name", ASCENDING)], unique=True)
 conversations_collection.create_index([("participants", ASCENDING)])
 conversations_collection.create_index([("messages.content", TEXT)])
-
 connections: Dict[str, Set[WebSocket]] = {}
 
 class BioUpdate(BaseModel):
@@ -95,7 +98,6 @@ def login(form_data: UserCreate):
     user = authenticate_user(users_collection, form_data.name, form_data.password)
     if not user:
         raise HTTPException(status_code=400, detail="Nom d'utilisateur ou mot de passe incorrect")
-
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
         data={"sub": user.name}, expires_delta=access_token_expires
