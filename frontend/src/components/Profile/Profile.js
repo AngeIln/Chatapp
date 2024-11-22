@@ -1,5 +1,3 @@
-// frontend/src/components/Profile.js
-
 import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
 import axios from '../../utils/api';
@@ -61,6 +59,8 @@ const Profile = () => {
         avatar_url,
       }));
 
+      localStorage.setItem('user', JSON.stringify({ ...user, avatar_url }));
+
       setSelectedFile(null);
       setPreviewImage(null);
       setError('');
@@ -81,7 +81,7 @@ const Profile = () => {
           <div className={styles.avatarContainer}>
             <div className={styles.avatar}>
               {user.avatar_url ? (
-                <img src={user.avatar_url} alt="Avatar" className={styles.avatarImage} />
+                <img src={user.avatar_url} alt="Avatar" className={styles.avatarImage} onError={(e) => e.target.src='default_avatar.png'}/>
               ) : (
                 <span>{user.name.charAt(0).toUpperCase()}</span>
               )}
@@ -93,9 +93,14 @@ const Profile = () => {
               id="avatar-upload"
               style={{ display: 'none' }}
             />
-            <label htmlFor="avatar-upload" className={styles.uploadLabel} onClick={handleAvatarUpload}>
-              Change Avatar
+            <label htmlFor="avatar-upload" className={styles.uploadLabel}>
+              Changer l'avatar
             </label>
+            {selectedFile && (
+              <button onClick={handleAvatarUpload} className={styles.uploadButton}>
+                Télécharger
+              </button>
+            )}
           </div>
           <h1 className={styles.username}>{user.name}</h1>
         </div>

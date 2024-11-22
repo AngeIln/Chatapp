@@ -1,5 +1,4 @@
-// frontend/src/contexts/AuthContext.jsx
-
+// frontend/src/contexts/AuthContext.js
 import React, { createContext, useState, useEffect } from 'react';
 import axios from '../utils/api';
 

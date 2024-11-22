@@ -291,7 +291,6 @@ def get_messages(conversation_id: str, current_user: UserInDB = Depends(get_curr
     messages = [Message(**msg) for msg in conversation.get("messages", [])]
     return messages
 
-# Endpoint pour supprimer une conversation
 @app.delete("/conversations/{conversation_id}")
 def delete_conversation(conversation_id: str, current_user: UserInDB = Depends(get_current_user)):
     conversation = conversations_collection.find_one({"_id": ObjectId(conversation_id)})
@@ -308,7 +307,7 @@ async def upload_avatar(file: UploadFile = File(...), current_user: UserInDB = D
     if not file.content_type.startswith('image/'):
         raise HTTPException(status_code=400, detail="Seuls les fichiers image sont autorisés.")
 
-    # Vérifier la taille du fichier (limité à 5MB)
+    # Vérifier la taille du fichier (limitée à 5MB)
     contents = await file.read()
     MAX_FILE_SIZE = 5 * 1024 * 1024  # 5 MB
     if len(contents) > MAX_FILE_SIZE:

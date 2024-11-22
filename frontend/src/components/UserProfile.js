@@ -1,5 +1,3 @@
-// frontend/src/components/UserProfile.jsx
-
 import React, { useEffect, useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from '../utils/api';
@@ -32,7 +30,7 @@ function UserProfile() {
     <div className={styles.profileContainer}>
       <div className={styles.avatar}>
         {userData.avatar_url ? (
-          <img src={userData.avatar_url} alt={`${userData.name} Avatar`} />
+          <img src={userData.avatar_url} alt={`${userData.name} Avatar`} onError={(e) => e.target.src='default_avatar.png'}/>
         ) : (
           <span>{userData.name.charAt(0).toUpperCase()}</span>
         )}

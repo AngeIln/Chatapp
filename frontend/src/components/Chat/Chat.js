@@ -1,5 +1,3 @@
-// frontend/src/components/Chat/Chat.js
-
 import React, { useEffect, useState, useContext, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from '../../utils/api';
@@ -11,7 +9,7 @@ import MessageReactions from './MessageReactions';
 
 function Chat() {
   const { conversationId } = useParams();
-  const { user } = useContext(AuthContext);
+  const { user, setUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const [conversations, setConversations] = useState([]);
@@ -207,7 +205,7 @@ function Chat() {
           >
             <div className={styles.userAvatar} onClick={() => handleProfileClick(user.name)}>
               {user.avatar_url ? (
-                <img src={user.avatar_url} alt="Avatar" className={styles.avatarImage} />
+                <img src={user.avatar_url} alt="Avatar" className={styles.avatarImage} onError={(e) => e.target.src='default_avatar.png'}/>
               ) : (
                 <span>{user.name.charAt(0).toUpperCase()}</span>
               )}
@@ -243,7 +241,7 @@ function Chat() {
               >
                 <div className={styles.conversationAvatar} onClick={() => handleProfileClick(conv.participants[0])}>
                   {usersMap[conv.participants[0]]?.avatar_url ? (
-                    <img src={usersMap[conv.participants[0]].avatar_url} alt={`${usersMap[conv.participants[0]].name} Avatar`} />
+                    <img src={usersMap[conv.participants[0]].avatar_url} alt={`${usersMap[conv.participants[0]].name} Avatar`} onError={(e) => e.target.src='default_avatar.png'}/>
                   ) : (
                     <span>{usersMap[conv.participants[0]]?.name.charAt(0).toUpperCase()}</span>
                   )}
@@ -288,13 +286,13 @@ function Chat() {
                     <div className={styles.messagePicture} onClick={() => handleProfileClick(msg.sender)}>
                       {msg.sender === user.name ? (
                         user.avatar_url ? (
-                          <img src={user.avatar_url} alt="Your Avatar" className={styles.avatarImage} />
+                          <img src={user.avatar_url} alt="Your Avatar" className={styles.avatarImage} onError={(e) => e.target.src='default_avatar.png'}/>
                         ) : (
                           <span>{user.name.charAt(0).toUpperCase()}</span>
                         )
                       ) : (
                         usersMap[msg.sender]?.avatar_url ? (
-                          <img src={usersMap[msg.sender].avatar_url} alt={`${msg.sender} Avatar`} className={styles.avatarImage} />
+                          <img src={usersMap[msg.sender].avatar_url} alt={`${msg.sender} Avatar`} className={styles.avatarImage} onError={(e) => e.target.src='default_avatar.png'}/>
                         ) : (
                           <span>{usersMap[msg.sender]?.name.charAt(0).toUpperCase()}</span>
                         )

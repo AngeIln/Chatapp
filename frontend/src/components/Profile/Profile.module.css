@@ -70,6 +70,21 @@
   color: var(--secondary-color);
 }
 
+.uploadButton {
+  margin-top: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: var(--button-background);
+  color: var(--text-color);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.uploadButton:hover {
+  background: var(--button-hover);
+}
+
 .bioSection {
   margin-top: 2rem;
 }
@@ -150,6 +165,27 @@
   border-radius: 5px;
   background: rgba(255, 255, 255, 0.1);
   margin-top: 10px;
+}
+
+.imagePreview {
+  max-width: 200px;
+  max-height: 200px;
+  border-radius: 10px;
+  margin: 10px 0;
+  object-fit: contain;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  color: var(--text-color);
+  cursor: pointer;
+  font-size: 1rem;
+  transition: color 0.3s ease;
+}
+
+.closeButton:hover {
+  color: var(--primary-color);
 }
 
 /* Custom Scrollbar */
