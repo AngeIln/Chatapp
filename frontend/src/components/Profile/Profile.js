@@ -94,11 +94,11 @@ const Profile = () => {
               style={{ display: 'none' }}
             />
             <label htmlFor="avatar-upload" className={styles.uploadLabel}>
-              Changer l'avatar
+              Change Avatar
             </label>
             {selectedFile && (
               <button onClick={handleAvatarUpload} className={styles.uploadButton}>
-                Télécharger
+                Upload
               </button>
             )}
           </div>
