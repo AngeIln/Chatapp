@@ -34,7 +34,7 @@ app = FastAPI()
 # Configuration CORS
 origins = [
     "http://localhost:3000",  # Frontend en développement
-    "https://your-frontend-domain.com",  # Remplacez par le domaine de votre frontend en production
+    "https://frontend-lut9.onrender.com",  # Remplacez par le domaine de votre frontend en production
 ]
 
 app.add_middleware(
